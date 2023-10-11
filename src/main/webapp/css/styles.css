@@ -1,0 +1,21 @@
+body {
+    min-height: 100vh;
+    background-image: linear-gradient(#00a1c7, #ffffff);
+}
+
+.mainPage-search-area {
+    display: flex;
+}
+
+input {
+    height: 38px;
+}
+
+.registrationPage-main-area {
+    margin-top: 53.6px;
+}
+
+.registrationPage-button-registration, .loginPage-button-registration, .registrationPage-link-area {
+    margin-top: 24px;
+}
+

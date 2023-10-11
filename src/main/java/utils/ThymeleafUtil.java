@@ -10,6 +10,7 @@ public class ThymeleafUtil {
     public TemplateEngine getTemplateEngine(ServletContext servletContext) {
         ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver(servletContext);
         templateResolver.setTemplateMode(TemplateMode.HTML);
+        templateResolver.setCharacterEncoding("UTF-8");
         templateResolver.setPrefix("/templates/");
         templateResolver.setSuffix(".html");
 
