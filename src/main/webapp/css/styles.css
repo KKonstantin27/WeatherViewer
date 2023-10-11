@@ -11,11 +11,11 @@ input {
     height: 38px;
 }
 
-.registrationPage-main-area {
-    margin-top: 53.6px;
-}
+/*.registrationPage-main-area {*/
+/*    margin-top: 53.6px;*/
+/*}*/
 
-.registrationPage-button-registration, .loginPage-button-registration, .registrationPage-link-area, .registrationPage-errors-area {
+.registrationPage-button-registration, .authorizationPage-button-authorization, .registrationPage-link-area, .authorizationPage-link-area, .registrationPage-errors-area {
     margin-top: 24px;
 }
 
