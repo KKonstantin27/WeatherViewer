@@ -1,7 +1,6 @@
 package models;
 
 import jakarta.persistence.Table;
-
 import jakarta.persistence.*;
 
 @Entity

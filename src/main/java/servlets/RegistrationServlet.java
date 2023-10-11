@@ -29,6 +29,7 @@ public class RegistrationServlet extends BaseServlet {
 
         if (errors.size() == 0) {
             templateEngine.process("index", ctx);
+
         } else {
             ctx.setVariable("errors", errors);
             templateEngine.process("registration", ctx, response.getWriter());

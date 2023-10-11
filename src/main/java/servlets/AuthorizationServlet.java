@@ -2,13 +2,11 @@ package servlets;
 
 import org.thymeleaf.context.WebContext;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+
 
 @WebServlet(name = "AuthorizationServlet", value = "/authorization")
 public class AuthorizationServlet extends BaseServlet {
