@@ -7,9 +7,9 @@
     <link rel="stylesheet" th:href="@{/css/styles.css}" type="text/css">
 </head>
 <body>
-<div class="row justify-content-end" th:fragment="main-page-button">
+<div class="row justify-content-end" th:fragment="header">
     <div class="col-4 btn-group justify-content-end">
-        <form method="get">
+        <form method="get" th:action="@{/}">
             <button class="btn btn-dark">Главная страница</button>
         </form>
     </div>

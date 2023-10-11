@@ -9,7 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 
-@WebServlet(name = "RegistrationServlet", value = "")
+@WebServlet(name = "RegistrationServlet", value = "/registration")
 public class RegistrationServlet extends BaseServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         WebContext ctx = new WebContext(request, response, getServletContext());
