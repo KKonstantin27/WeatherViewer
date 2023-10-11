@@ -12,9 +12,9 @@
     <div class="row registrationPage-main-area">
         <h2 class="text-dark text-center">Регистрация пользователя</h2>
     </div>
-    <div class="row justify-content-end">
+    <div class="row justify-content-center">
         <div class="col-4">
-            <form class="justify-content-center" method="post" action="registration">
+            <form class="justify-content-center" method="post" action="">
                 <label class="col-12">Введите логин</label>
                 <input class="col-12" name="login" type="text" required>
                 <label class="col-12" for="password">Введите пароль</label>
@@ -24,12 +24,12 @@
                 <button class="btn btn-dark col-12 registrationPage-button-registration">Регистрация</button>
             </form>
         </div>
-        <div class="col-4">
-
-        </div>
     </div>
     <div class="row justify-content-center registrationPage-link-area">
         <a class="text-dark text-center " th:href="@{authorization.html}">Уже есть аккаунт</a>
+    </div>
+    <div class="row justify-content-center registrationPage-errors-area">
+        <div class="col-3" th:insert="registrationErrors :: errors"> </div>
     </div>
 </div>
 </body>
