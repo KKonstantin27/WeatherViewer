@@ -20,6 +20,7 @@
           <element id="library" level="project" name="Maven: org.attoparser:attoparser:2.0.5.RELEASE" />
           <element id="library" level="project" name="Maven: org.unbescape:unbescape:1.1.6.RELEASE" />
           <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.7.25" />
+          <element id="library" level="project" name="Maven: org.hibernate.orm:hibernate-core:6.3.1.Final" />
           <element id="library" level="project" name="Maven: jakarta.persistence:jakarta.persistence-api:3.1.0" />
           <element id="library" level="project" name="Maven: jakarta.transaction:jakarta.transaction-api:2.0.1" />
           <element id="library" level="project" name="Maven: org.jboss.logging:jboss-logging:3.5.0.Final" />
@@ -36,6 +37,11 @@
           <element id="library" level="project" name="Maven: com.sun.istack:istack-commons-runtime:4.1.1" />
           <element id="library" level="project" name="Maven: jakarta.inject:jakarta.inject-api:2.0.1" />
           <element id="library" level="project" name="Maven: org.antlr:antlr4-runtime:4.10.1" />
+          <element id="library" level="project" name="Maven: org.postgresql:postgresql:42.6.0" />
+          <element id="library" level="project" name="Maven: org.checkerframework:checker-qual:3.31.0" />
+          <element id="library" level="project" name="Maven: com.github.t3hnar:scala-bcrypt_2.13:4.3.0" />
+          <element id="library" level="project" name="Maven: org.scala-lang:scala-library:2.13.3" />
+          <element id="library" level="project" name="Maven: de.svenkubiak:jBCrypt:0.4.1" />
         </element>
       </element>
       <element id="directory" name="META-INF">

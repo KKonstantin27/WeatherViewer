@@ -9,11 +9,11 @@ public class Validator {
     private String passwordInvalidLength = "Пароль должен быть от 8 до 20 символов";
     private String differentPasswords = "Введённые пароли не совпадают";
 
-    public List<String> validateLogin(String login, List<String> errors) {
-        if (login.matches("^[a-zA-Z\\d._-]*$")) {
+    public List<String> validateLogin(String name, List<String> errors) {
+        if (name.matches("^[a-zA-Z\\d._-]*$")) {
             errors.add(loginInvalidChar);
         }
-        if (login.length() > 20 || login.length() < 4) {
+        if (name.length() > 20 || name.length() < 4) {
             errors.add(loginInvalidLength);
         }
         return errors;
