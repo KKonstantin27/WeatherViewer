@@ -9,26 +9,26 @@ public class Validator {
     private String passwordInvalidLength = "Пароль должен быть от 8 до 20 символов";
     private String differentPasswords = "Введённые пароли не совпадают";
 
-    public List<String> validateLogin(String name, List<String> errors) {
-        if (name.matches("^[a-zA-Z\\d._-]*$")) {
-            errors.add(loginInvalidChar);
+    public List<String> validateLogin(String name, List<String> messages) {
+        if (!name.matches("^(?!.*\\s)[a-zA-Z\\d._-]*$")) {
+            messages.add(loginInvalidChar);
         }
         if (name.length() > 20 || name.length() < 4) {
-            errors.add(loginInvalidLength);
+            messages.add(loginInvalidLength);
         }
-        return errors;
+        return messages;
     }
 
-    public List<String> validatePassword(String password, String passwordRepeat, List<String> errors) {
-        if (password.matches("^\\S*$")) {
-            errors.add(passwordInvalidChar);
+    public List<String> validatePassword(String password, String passwordRepeat, List<String> messages) {
+        if (!password.matches("^(?!.*\\s)[a-zA-Z\\d!@#$%^&*()_=+;:?.,<>]*$")) {
+            messages.add(passwordInvalidChar);
         }
         if (password.length() > 20 || password.length() < 8) {
-            errors.add(passwordInvalidLength);
+            messages.add(passwordInvalidLength);
         }
         if (!password.equals(passwordRepeat)) {
-            errors.add(differentPasswords);
+            messages.add(differentPasswords);
         }
-        return errors;
+        return messages;
     }
 }

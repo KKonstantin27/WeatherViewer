@@ -11,11 +11,11 @@ input {
     height: 38px;
 }
 
-/*.registrationPage-main-area {*/
-/*    margin-top: 53.6px;*/
-/*}*/
+.successfulRegistrationPage-main-area {
+    margin-top: 55px;
+}
 
-.registrationPage-button-registration, .authorizationPage-button-authorization, .registrationPage-link-area, .authorizationPage-link-area, .registrationPage-errors-area {
+.registrationPage-button-registration, .authorizationPage-button-authorization, .authorizationPage-link-area, .registrationPage-link-area, .registrationPage-messages-area, .authorizationPage-message-area, .successfulRegistrationPage-text-area {
     margin-top: 24px;
 }
 
@@ -25,7 +25,10 @@ input {
     list-style-type: none;
 }
 
+li {
+    padding-left: 5px;
+}
 
 .registrationPage-ul ::before {
-    content: "\2613    ";
+    content: "\2613";
 }

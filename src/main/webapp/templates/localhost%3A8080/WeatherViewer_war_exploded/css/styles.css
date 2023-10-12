@@ -15,7 +15,7 @@ input {
     margin-top: 53.6px;
 }
 
-.registrationPage-button-registration, .loginPage-button-registration, .registrationPage-link-area, .registrationPage-errors-area {
+.registrationPage-button-registration, .loginPage-button-registration, .registrationPage-link-area, .registrationPage-messages-area, .authorizationPage-message-area {
     margin-top: 24px;
 }
 

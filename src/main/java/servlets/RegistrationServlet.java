@@ -17,24 +17,24 @@ public class RegistrationServlet extends BaseServlet {
         templateEngine.process("registration", ctx, response.getWriter());
     }
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        List<String> errors = new ArrayList<>();
+        List<String> messages = new ArrayList<>();
 
         String name = request.getParameter("name");
         String password = request.getParameter("password");
         String passwordRepeat = request.getParameter("password-repeat");
 
-        errors = validator.validateLogin(name, errors);
-        errors = validator.validatePassword(password, passwordRepeat, errors);
+        messages = validator.validateLogin(name, messages);
+        messages = validator.validatePassword(password, passwordRepeat, messages);
 
         WebContext ctx = new WebContext(request, response, getServletContext());
 
-        if (errors.size() == 0) {
+        if (messages.size() == 0) {
             templateEngine.process("index", ctx);
             userDAO.save(name, BCrypt.hashpw(password, BCrypt.gensalt()));
-            ctx.setVariable("successfulRegistration", "Регистрация успешно завершена, теперь Вы можете войти в аккаунт, используя учётные данные");
-            templateEngine.process("authorization", ctx, response.getWriter());
+            ctx.setVariable("successfulRegistrationMessage", "Регистрация успешно завершена, теперь Вы можете войти в аккаунт, используя свои учётные данные");
+            templateEngine.process("successfulRegistration", ctx, response.getWriter());
         } else {
-            ctx.setVariable("errors", errors);
+            ctx.setVariable("errorRegistrationMessages", messages);
             templateEngine.process("registration", ctx, response.getWriter());
         }
     }

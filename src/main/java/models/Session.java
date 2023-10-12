@@ -12,7 +12,7 @@ public class Session {
     private String id;
 
     @ManyToOne
-    @Column (name = "userID")
+    @JoinColumn (name = "userID")
     private User user;
 
     @Column(name = "ExpiresAt")

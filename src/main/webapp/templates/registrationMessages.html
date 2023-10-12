@@ -8,8 +8,8 @@
 </head>
 <body>
 
-<ul class="registrationPage-ul" th:fragment="errors" th:each="error : ${errors}">
-  <li th:text="${error}"></li>
+<ul class="registrationPage-ul" th:fragment="messages" th:each="message : ${errorRegistrationMessages}">
+  <li th:text="${message}"    ></li>
 </ul>
 
 </body>
