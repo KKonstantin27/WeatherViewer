@@ -1,5 +1,6 @@
 package servlets;
 
+import exceptions.UserAlreadyExistException;
 import org.mindrot.jbcrypt.BCrypt;
 import org.thymeleaf.context.WebContext;
 
@@ -17,24 +18,29 @@ public class RegistrationServlet extends BaseServlet {
         templateEngine.process("registration", ctx, response.getWriter());
     }
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        List<String> messages = new ArrayList<>();
+        List<String> errors = new ArrayList<>();
 
         String name = request.getParameter("name");
         String password = request.getParameter("password");
         String passwordRepeat = request.getParameter("password-repeat");
 
-        messages = validator.validateLogin(name, messages);
-        messages = validator.validatePassword(password, passwordRepeat, messages);
+        errors = validator.validateLogin(name, errors);
+        errors = validator.validatePassword(password, passwordRepeat, errors);
 
         WebContext ctx = new WebContext(request, response, getServletContext());
 
-        if (messages.size() == 0) {
-            templateEngine.process("index", ctx);
-            userDAO.save(name, BCrypt.hashpw(password, BCrypt.gensalt()));
-            ctx.setVariable("successfulRegistrationMessage", "Регистрация успешно завершена, теперь Вы можете войти в аккаунт, используя свои учётные данные");
-            templateEngine.process("successfulRegistration", ctx, response.getWriter());
+        if (errors.size() == 0) {
+            try {
+                userService.registerUser(name, password);
+                ctx.setVariable("successfulRegistrationMessage", "Регистрация успешно завершена, теперь Вы можете войти в аккаунт, используя свои учётные данные");
+                templateEngine.process("successfulRegistration", ctx, response.getWriter());
+            } catch (UserAlreadyExistException e) {
+                errors.add(e.getMessage());
+                ctx.setVariable("registrationErrors", errors);
+                templateEngine.process("registration", ctx, response.getWriter());
+            }
         } else {
-            ctx.setVariable("errorRegistrationMessages", messages);
+            ctx.setVariable("registrationErrors", errors);
             templateEngine.process("registration", ctx, response.getWriter());
         }
     }

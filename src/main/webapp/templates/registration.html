@@ -15,8 +15,8 @@
     <div class="row justify-content-center">
         <div class="col-4">
             <form class="justify-content-center" method="post" th:action="@{/registration}">
-                <label class="col-12">Введите логин</label>
-                <input class="col-12" name="name" type="text" required>
+                <label class="col-12" for="name">Введите имя пользователя</label>
+                <input class="col-12" name="name" id="name" type="text" required>
                 <label class="col-12" for="password">Введите пароль</label>
                 <input class="col-12" id="password" name="password" type="password" required>
                 <label class="col-12" for="password-repeat">Повторите пароль</label>
@@ -29,7 +29,7 @@
         <a class="text-dark text-center " th:href="@{/authorization}">Уже есть аккаунт</a>
     </div>
     <div class="row justify-content-center registrationPage-messages-area">
-        <div class="col-3" th:insert="registrationMessages :: messages"> </div>
+        <div class="col-3" th:insert="registrationErrors :: errors"> </div>
     </div>
 </div>
 </body>

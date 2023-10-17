@@ -14,5 +14,19 @@
         </form>
     </div>
 </div>
+<div class="col-4 btn-group justify-content-end" th:fragment="unauthorized-header">
+    <form method="get" th:action="@{/authorization}">
+        <button class="btn btn-dark">Авторизация</button>
+    </form>
+    <form method="get" th:action="@{/registration}">
+        <button class="btn btn-dark">Регистрация</button>
+    </form>
+</div>
+<div class="col-4 btn-group justify-content-end" th:fragment="authorized-header">
+    <p th:text="${userName}"> </p>
+    <form method="get" th:action="@{/authorization}">
+        <button class="btn btn-dark">Выйти из аккаунта</button>
+    </form>
+</div>
 </body>
 </html>

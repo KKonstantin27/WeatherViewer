@@ -1,7 +1,7 @@
 package utils;
 
 import models.Location;
-import models.Session;
+import models.UserSession;
 import models.User;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -12,7 +12,7 @@ public class DBUtil {
     public static void buildSessionFactory() {
         if (sessionFactory == null) {
             Configuration configuration = new Configuration();
-            configuration.configure().addAnnotatedClass(User.class).addAnnotatedClass(Location.class).addAnnotatedClass(Session.class);
+            configuration.configure().addAnnotatedClass(User.class).addAnnotatedClass(Location.class).addAnnotatedClass(UserSession.class);
             sessionFactory = configuration.buildSessionFactory();
         }
     }

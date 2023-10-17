@@ -9,26 +9,26 @@ public class Validator {
     private String passwordInvalidLength = "Пароль должен быть от 8 до 20 символов";
     private String differentPasswords = "Введённые пароли не совпадают";
 
-    public List<String> validateLogin(String name, List<String> messages) {
+    public List<String> validateLogin(String name, List<String> errors) {
         if (!name.matches("^(?!.*\\s)[a-zA-Z\\d._-]*$")) {
-            messages.add(loginInvalidChar);
+            errors.add(loginInvalidChar);
         }
         if (name.length() > 20 || name.length() < 4) {
-            messages.add(loginInvalidLength);
+            errors.add(loginInvalidLength);
         }
-        return messages;
+        return errors;
     }
 
-    public List<String> validatePassword(String password, String passwordRepeat, List<String> messages) {
+    public List<String> validatePassword(String password, String passwordRepeat, List<String> errors) {
         if (!password.matches("^(?!.*\\s)[a-zA-Z\\d!@#$%^&*()_=+;:?.,<>]*$")) {
-            messages.add(passwordInvalidChar);
+            errors.add(passwordInvalidChar);
         }
         if (password.length() > 20 || password.length() < 8) {
-            messages.add(passwordInvalidLength);
+            errors.add(passwordInvalidLength);
         }
         if (!password.equals(passwordRepeat)) {
-            messages.add(differentPasswords);
+            errors.add(differentPasswords);
         }
-        return messages;
+        return errors;
     }
 }

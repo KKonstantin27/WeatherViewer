@@ -4,24 +4,24 @@ import jakarta.persistence.Table;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "Locations")
+@Table(name = "locations")
 public class Location {
     @Id
-    @Column(name = "ID")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "Name")
+    @Column(name = "name")
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "userID")
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "Latitude")
+    @Column(name = "latitude")
     private double latitude;
 
-    @Column(name = "Longitude")
+    @Column(name = "longitude")
     private double longitude;
 
     public Location() {
