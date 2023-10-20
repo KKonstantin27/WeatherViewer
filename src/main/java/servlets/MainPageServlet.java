@@ -1,8 +1,13 @@
 package servlets;
 
+import models.User;
+import models.UserSession;
 import org.thymeleaf.context.WebContext;
 
 import java.io.*;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Optional;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 
@@ -10,16 +15,11 @@ import javax.servlet.annotation.*;
 public class MainPageServlet extends BaseServlet {
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        WebContext ctx = new WebContext(request, response, getServletContext());
         Cookie[] cookies = request.getCookies();
-        String userSessionID = null;
-        String userName = null;
+        WebContext ctx = new WebContext(request, response, getServletContext());
         if (cookies != null) {
-            userSessionID = cookies[0].getValue();
-            userName = cookies[1].getValue();
+            ctx = getCTXForAuthorizeUser(request, response, cookies);
         }
-        ctx.setVariable("userSessionID", userSessionID);
-        ctx.setVariable("userName", userName);
         templateEngine.process("index", ctx, response.getWriter());
     }
 

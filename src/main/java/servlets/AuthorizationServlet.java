@@ -16,10 +16,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 
-@WebServlet(name = "AuthorizationServlet", value = "/authorization")
+@WebServlet(value = "/authorization")
 public class AuthorizationServlet extends BaseServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Cookie[] cookies = request.getCookies();
         WebContext ctx = new WebContext(request, response, getServletContext());
+        if (cookies != null) {
+            response.sendRedirect(request.getContextPath() + "/");
+        }
         templateEngine.process("authorization", ctx, response.getWriter());
     }
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -27,12 +31,13 @@ public class AuthorizationServlet extends BaseServlet {
         String password = request.getParameter("password");
         WebContext ctx = new WebContext(request, response, getServletContext());
         try {
-            User user = userService.loginUser(name, password);
-            UserSession userSession = userService.getSession(user);
+            User user = userService.signIn(name, password);
+            Optional<UserSession> userSessionOptional = userService.getSession(user);
+            UserSession userSession = userSessionOptional.orElseGet(() -> userService.createSession(user));
             Cookie cookieUserSession = new Cookie("userSessionID", String.valueOf(userSession.getId()));
             Cookie cookieUserName = new Cookie("userName", String.valueOf(user.getName()));
-            cookieUserSession.setMaxAge(7200);
-            cookieUserName.setMaxAge(7200);
+            cookieUserSession.setMaxAge(-1);
+            cookieUserName.setMaxAge(-1);
             response.addCookie(cookieUserSession);
             response.addCookie(cookieUserName);
             response.sendRedirect(request.getContextPath() + "/");

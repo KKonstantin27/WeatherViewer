@@ -8,7 +8,10 @@
 </head>
 <body>
 <div class="fluid-container">
-  <div class="row justify-content-end" th:insert="header :: ${userSessionID == null} ? 'unauthorized-header' : 'authorized-header'"></div>
+  <div class="row justify-content-between header-row">
+    <div th:replace="header :: main-page-return"></div>
+    <div th:replace="header :: ${userSessionID == null} ? 'unauthorized-header' : 'authorized-header'"></div>
+  </div>
   <div class="row">
     <h2 class="text-dark text-center">Поиск по локации</h2>
   </div>

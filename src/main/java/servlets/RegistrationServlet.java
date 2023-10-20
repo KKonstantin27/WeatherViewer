@@ -11,10 +11,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 
-@WebServlet(name = "RegistrationServlet", value = "/registration")
+@WebServlet(value = "/registration")
 public class RegistrationServlet extends BaseServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Cookie[] cookies = request.getCookies();
         WebContext ctx = new WebContext(request, response, getServletContext());
+        if (cookies != null) {
+            response.sendRedirect(request.getContextPath() + "/");
+        }
         templateEngine.process("registration", ctx, response.getWriter());
     }
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -31,7 +35,7 @@ public class RegistrationServlet extends BaseServlet {
 
         if (errors.size() == 0) {
             try {
-                userService.registerUser(name, password);
+                userService.signUp(name, password);
                 ctx.setVariable("successfulRegistrationMessage", "Регистрация успешно завершена, теперь Вы можете войти в аккаунт, используя свои учётные данные");
                 templateEngine.process("successfulRegistration", ctx, response.getWriter());
             } catch (UserAlreadyExistException e) {

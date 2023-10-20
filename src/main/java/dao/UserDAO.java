@@ -24,7 +24,7 @@ public class UserDAO {
     public Optional<User> getByName(String name) {
         try (Session session = DBUtil.getSessionFactory().openSession()) {
             session.beginTransaction();
-            Query query = session.createQuery("FROM User WHERE name = :name");
+            Query<User> query = session.createQuery("FROM User WHERE name = :name", User.class);
             query.setParameter("name", name);
             Optional<User> userOptional = query.uniqueResultOptional();
             session.getTransaction().commit();

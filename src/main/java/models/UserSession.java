@@ -3,10 +3,10 @@ package models;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.id.GUIDGenerator;
 
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 @Entity
@@ -24,11 +24,15 @@ public class UserSession {
     private User user;
 
     @Column(name = "expires_at")
-    private LocalDateTime expiresAt;
+    private ZonedDateTime expiresAt;
 
     public UserSession(User user) {
         this.id = UUID.randomUUID().toString();
         this.user = user;
-        this.expiresAt = LocalDateTime.now().plusHours(4);
+        this.expiresAt = ZonedDateTime.now(ZoneId.of("UTC")).plusHours(8);
+    }
+
+    public void updateExpiresAt() {
+        this.expiresAt = expiresAt.plusHours(8);
     }
 }

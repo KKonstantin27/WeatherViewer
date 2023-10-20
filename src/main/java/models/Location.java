@@ -2,9 +2,13 @@ package models;
 
 import jakarta.persistence.Table;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 @Entity
 @Table(name = "locations")
+@Data
+@AllArgsConstructor
 public class Location {
     @Id
     @Column(name = "id")
@@ -24,6 +28,5 @@ public class Location {
     @Column(name = "longitude")
     private double longitude;
 
-    public Location() {
-    }
+    public Location() {}
 }
