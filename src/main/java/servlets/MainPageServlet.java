@@ -1,5 +1,6 @@
 package servlets;
 
+import models.Location;
 import models.User;
 import models.UserSession;
 import org.thymeleaf.context.WebContext;
@@ -7,6 +8,7 @@ import org.thymeleaf.context.WebContext;
 import java.io.*;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Optional;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
@@ -21,9 +23,5 @@ public class MainPageServlet extends BaseServlet {
             ctx = getCTXForAuthorizeUser(request, response, cookies);
         }
         templateEngine.process("index", ctx, response.getWriter());
-    }
-
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
     }
 }

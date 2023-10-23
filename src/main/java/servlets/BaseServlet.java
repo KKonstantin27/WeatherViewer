@@ -6,6 +6,7 @@ import models.User;
 import models.UserSession;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
+import services.OpenWeatherAPIService;
 import services.UserService;
 import utils.ThymeleafUtil;
 import utils.Validator;
@@ -27,6 +28,7 @@ public class BaseServlet extends HttpServlet {
     protected UserService userService = new UserService();
     protected UserDAO userDAO = new UserDAO();
     protected UserSessionDAO userSessionDAO = new UserSessionDAO();
+    protected OpenWeatherAPIService openWeatherAPIService = new OpenWeatherAPIService();
 
 
 
