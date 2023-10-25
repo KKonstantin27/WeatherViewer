@@ -14,7 +14,7 @@
     </div>
     <div class="row justify-content-center">
         <div class="col-4">
-            <form class="justify-content-center" method="post" th:action="@{/authorization}">
+            <form class="justify-content-center" method="POST" th:action="@{/authorization}">
                 <label class="col-12" for="name">Введите имя пользователя</label>
                 <input class="col-12" name="name" id="name" type="text" required>
                 <label class="col-12" for="password">Введите пароль</label>
@@ -26,9 +26,13 @@
     <div class="row justify-content-center authorizationPage-link-area">
         <a class="text-dark text-center " th:href="@{/registration}">Создать новый аккаунт</a>
     </div>
-<!--    <div class="row justify-content-center authorizationPage-message-area">-->
-<!--        <div class="col-3" th:insert="authorizationMessages :: "> </div>-->
-<!--    </div>-->
+    <div class="row justify-content-center authorizationPage-message-area" th:hidden="${authorizationError == null}">
+        <div class="col-3 justify-content-center">
+            <ul class="justify-content-center p-0 authorizationPage-ul">
+                <li class="text-danger text-center" th:text="${authorizationError}"></li>
+            </ul>
+        </div>
+    </div>
 </div>
 </body>
 </html>

@@ -7,10 +7,8 @@
   <link rel="stylesheet" th:href="@{/css/styles.css}" type="text/css">
 </head>
 <body>
-
-<ul class="registrationPage-ul" th:fragment="errors" th:each="error : ${registrationErrors}">
-  <li class="text-danger" th:text="${error} "></li>
-</ul>
-
+  <ul class="registrationPage-ul" th:fragment="errors" th:each="error : ${registrationErrors}">
+    <li class="text-danger" th:text="${error}"></li>
+  </ul>
 </body>
 </html>

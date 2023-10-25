@@ -1,7 +1,9 @@
 package servlets;
 
+import dao.LocationDAO;
 import dao.UserDAO;
 import dao.UserSessionDAO;
+import dto.LocationDTO;
 import models.User;
 import models.UserSession;
 import org.thymeleaf.TemplateEngine;
@@ -27,6 +29,7 @@ public class BaseServlet extends HttpServlet {
     protected Validator validator = new Validator();
     protected UserService userService = new UserService();
     protected UserDAO userDAO = new UserDAO();
+    protected LocationDAO locationDAO = new LocationDAO();
     protected UserSessionDAO userSessionDAO = new UserSessionDAO();
     protected OpenWeatherAPIService openWeatherAPIService = new OpenWeatherAPIService();
 

@@ -17,18 +17,23 @@
   </div>
   <div class="row justify-content-center">
     <div class="col-8">
-      <form method="GET" th:action="@{/search}" class="justify-content-center align-items-center mainPage-search-area">
+      <form method="GET" th:action="@{/search}" class="justify-content-center align-items-center mt-0 searchPage-search-area">
         <input type="text" name="location-name" class="col-8">
         <button class="btn btn-dark col-2">Поиск</button>
       </form>
     </div>
   </div>
-  <div class="row justify-content-center" th:each="location : ${locations}">
-    <div class="col-6" th:text="${location}"></div>
+  <div class="row justify-content-center my-3" th:each="location : ${locations}">
+    <div class="col-8">
+      <form method="POST" name="location" th:action="@{/search}" class="justify-content-center align-items-center mt-0 searchPage-search-area">
+        <div class="col-8 text-dark align-items-center searchPage-result" th:text="${location}"></div>
+        <input name="name" th:value="${location.getName()}" hidden>
+        <input name="latitude" th:value="${location.getLatitude()}" hidden>
+        <input name="longitude" th:value="${location.getLongitude()}" hidden>
+        <button class="btn btn-dark col-2 searchPage-result-button" th:disabled="${userSessionID == null}">В избранное</button>
+      </form>
+    </div>
   </div>
-  <ul class="registrationPage-ul" th:fragment="errors" th:each="error : ${registrationErrors}">
-    <li class="text-danger" th:text="${error} "></li>
-  </ul>
 </div>
 </body>
 </html>
