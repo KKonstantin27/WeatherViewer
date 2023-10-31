@@ -1,14 +1,13 @@
 package models;
 
-import jakarta.persistence.Table;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "locations")
+@NoArgsConstructor
 @Data
-@AllArgsConstructor
 public class Location {
     @Id
     @Column(name = "id")
@@ -22,13 +21,11 @@ public class Location {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "latitude")
+    @Column(name = "latitude", nullable = false)
     private double latitude;
 
-    @Column(name = "longitude")
+    @Column(name = "longitude", nullable = false)
     private double longitude;
-
-    public Location() {}
 
     public Location(String name, User user, double latitude, double longitude) {
         this.name = name;

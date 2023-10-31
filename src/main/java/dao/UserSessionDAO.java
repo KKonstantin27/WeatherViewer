@@ -9,6 +9,7 @@ import utils.DBUtil;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 public class UserSessionDAO {
@@ -16,14 +17,16 @@ public class UserSessionDAO {
     public Optional<UserSession> getByUser(User user) {
         try (Session session = DBUtil.getSessionFactory().openSession()) {
             session.beginTransaction();
-            Query<UserSession> query = session.createQuery("FROM UserSession WHERE user = :user", UserSession.class);
+            Query<UserSession> query = session.createQuery("FROM UserSession WHERE user = :user AND expiresAt > :currentDateTime ", UserSession.class);
             query.setParameter("user", user);
+            query.setParameter("currentDateTime", ZonedDateTime.now(ZoneId.of("UTC")));
             Optional<UserSession> userSessionOptional = query.uniqueResultOptional();
             userSessionOptional.ifPresent(UserSession::updateExpiresAt);
             session.getTransaction().commit();
             return userSessionOptional;
         }
     }
+
     public UserSession save(User user) {
         UserSession userSession;
         try (Session session = DBUtil.getSessionFactory().openSession()) {
@@ -35,15 +38,17 @@ public class UserSessionDAO {
         return userSession;
     }
 
-    public void delete(User user) {
+    public void delete(User user, String userSessionID) {
         try (Session session = DBUtil.getSessionFactory().openSession()) {
             session.beginTransaction();
-            MutationQuery query = session.createMutationQuery("DELETE FROM UserSession WHERE user = :user");
+            MutationQuery query = session.createMutationQuery("DELETE FROM UserSession WHERE user = :user AND id = :userSessionID");
             query.setParameter("user", user);
+            query.setParameter("userSessionID", userSessionID);
             query.executeUpdate();
             session.getTransaction().commit();
         }
     }
+
     public void delete() {
         try (Session session = DBUtil.getSessionFactory().openSession()) {
             session.beginTransaction();

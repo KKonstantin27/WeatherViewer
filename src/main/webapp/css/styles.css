@@ -1,6 +1,6 @@
 body {
     min-height: 100vh;
-    background-image: linear-gradient(#00a1c7, #ffffff);
+    background-image: linear-gradient(#00a1c7, #cbcbcb);
 }
 
 .header-row {
@@ -8,16 +8,15 @@ body {
     height: 40px;
 }
 
-.header-link, .header-username {
-    display: flex;
-}
-
 .header-button {
     height: 40px;
 }
 
-.mainPage-search-area, .searchPage-search-area, .searchPage-result {
-    display: flex;
+.mainPage-weather, .searchPage-result  {
+    border-style: solid;
+    border-width: thin;
+    border-radius: 5px;
+    border-color: black;
 }
 
 input {
@@ -37,17 +36,11 @@ input {
     list-style-type: none;
 }
 
-li {
-    padding-left: 10px;
-}
-
 .registrationPage-ul ::before, .authorizationPage-ul ::before {
     content: "\2613";
 }
 
 .searchPage-result {
-    background-color: white;
-    border-radius: 5px;
     height: 38px;
 }
 

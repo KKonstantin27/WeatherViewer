@@ -10,7 +10,7 @@ import javax.servlet.annotation.WebListener;
 @WebListener
 public class ContextListener implements ServletContextListener {
     @Override
-    public void contextInitialized (ServletContextEvent sce) {
+    public void contextInitialized(ServletContextEvent sce) {
         ServletContext sc = sce.getServletContext();
         DBUtil.buildSessionFactory();
         sc.setRequestCharacterEncoding("UTF-8");

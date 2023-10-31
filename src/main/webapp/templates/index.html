@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Weather view</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <script src="https://kit.fontawesome.com/894c362582.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" th:href="@{/css/styles.css}" type="text/css">
 </head>
 <body>
@@ -17,11 +18,43 @@
   </div>
   <div class="row justify-content-center">
     <div class="col-8">
-      <form method="GET" th:action="@{/search}" class="justify-content-center align-items-center mt-0 mainPage-search-area">
+      <form method="GET" th:action="@{/search}" class="justify-content-center align-items-center mt-0 d-flex">
         <input type="text" name="location-name" class="col-8">
-        <button class="btn btn-dark col-2">Поиск</button>
+        <button class="btn btn-dark col-2">Поиск <i class="fa fa-light fa-magnifying-glass" style="color: #fcfcfc;"></i></button>
       </form>
     </div>
+  </div>
+  <div class="row justify-content-center mt-5">
+    <div class="col-8 d-flex flex-wrap mainPage-weather-area">
+      <div class="col-4 justify-content-center mainPage-weather mb-2" th:each="weather : ${weathers}">
+        <div class="justify-content-end d-flex">
+          <p class="col-10 fs-3 text-center" th:text="${weather.location.name + ', ' + weather.country}"></p>
+          <form class="col-1" method="POST" th:action="@{/}">
+            <input name="location-id" th:value="${weather.location.id}" hidden>
+            <button class="text-danger bg-transparent border-0 fs-3">X</button>
+<!--            <input class="text-danger bg-transparent border-0 fs-3" type="submit" >X</input>-->
+          </form>
+        </div>
+        <div class="justify-content-center align-items-center d-flex">
+          <img class="col-4 rounded" th:src="@{'https://openweathermap.org/img/wn/' + ${weather.icon} + '@2x.png'}">
+          <p class="col-4 fs-3" th:text="${weather.temp + '°C'}"></p>
+        </div>
+        <div class="text-center" th:text="${weather.description}"></div>
+        <div class="text-center" th:text="${'ощущается как ' + weather.feels_like + '°C'}"></div>
+        <div class="justify-content-center align-items-center d-flex" >
+          <i class="fa fa-solid fa-wind fa-fw" style="color: #000015;"></i>
+          <p class="mb-0" th:text="${weather.windSpeed + 'м/с, ' + weather.windDirection}"></p>
+        </div>
+        <div class="justify-content-center align-items-center d-flex">
+          <i class="fa fa-solid fa-droplet fa-fw" style="color: #000015;"></i>
+          <p class="mb-0" th:text="${weather.humidity + '%'}"></p>
+          <i class="fa fa-solid fa-circle-down fa-fw ms-1" style="color: #000015;"></i>
+          <p class="mb-0" th:text="${weather.pressure + 'гПа'}"></p>
+          <i class="fa fa-solid fa-binoculars ms-1" style="color: #000015;"></i>
+          <p class="mb-0" th:text="${weather.visibility + 'м'}"></p>
+        </div>
+      </div>
+  </div>
   </div>
 </div>
 </body>

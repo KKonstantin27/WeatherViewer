@@ -1,34 +1,36 @@
 package utils;
 
-import java.util.List;
-
 public class Validator {
-    private String loginInvalidChar = "Логин содержит недопустимые символы";
-    private String loginInvalidLength = "Логин должен быть от 4 до 20 символов";
-    private String passwordInvalidChar = "Пароль содержит недопустимые символы";
-    private String passwordInvalidLength = "Пароль должен быть от 8 до 20 символов";
-    private String differentPasswords = "Введённые пароли не совпадают";
+    private String loginInvalidChar = "Логин содержит недопустимые символы_";
+    private String loginInvalidLength = "Логин должен быть от 4 до 20 символов_";
+    private String passwordInvalidChar = "Пароль содержит недопустимые символы_";
+    private String passwordInvalidLength = "Пароль должен быть от 8 до 20 символов_";
+    private String differentPasswords = "Введённые пароли не совпадают_";
 
-    public List<String> validateLogin(String name, List<String> errors) {
+    public StringBuilder validateLogin(String name, StringBuilder errors) {
         if (!name.matches("^(?!.*\\s)[a-zA-Z\\d._-]*$")) {
-            errors.add(loginInvalidChar);
+            errors.append(loginInvalidChar);
         }
         if (name.length() > 20 || name.length() < 4) {
-            errors.add(loginInvalidLength);
+            errors.append(loginInvalidLength);
         }
         return errors;
     }
 
-    public List<String> validatePassword(String password, String passwordRepeat, List<String> errors) {
+    public StringBuilder validatePassword(String password, String passwordRepeat, StringBuilder errors) {
         if (!password.matches("^(?!.*\\s)[a-zA-Z\\d!@#$%^&*()_=+;:?.,<>]*$")) {
-            errors.add(passwordInvalidChar);
+            errors.append(passwordInvalidChar);
         }
         if (password.length() > 20 || password.length() < 8) {
-            errors.add(passwordInvalidLength);
+            errors.append(passwordInvalidLength);
         }
         if (!password.equals(passwordRepeat)) {
-            errors.add(differentPasswords);
+            errors.append(differentPasswords);
         }
         return errors;
+    }
+
+    public boolean isValidSearchQuery(String locationName) {
+        return locationName.matches("^[\\w\\-]+$");
     }
 }

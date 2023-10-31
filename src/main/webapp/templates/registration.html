@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Registration</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/894c362582.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" th:href="@{/css/styles.css}" type="text/css">
 </head>
 <body>
@@ -21,7 +22,7 @@
                 <input class="col-12" id="password" name="password" type="password" required>
                 <label class="col-12" for="password-repeat">Повторите пароль</label>
                 <input class="col-12" id="password-repeat" name="password-repeat" type="password" required>
-                <button class="btn btn-dark col-12 registrationPage-button-registration">Регистрация</button>
+                <button class="btn btn-dark col-12 registrationPage-button-registration"><i class="fa fa-solid fa-file-pen fa-fw" style="color: #fcfcfc;"></i>Регистрация</button>
             </form>
         </div>
     </div>
@@ -29,7 +30,11 @@
         <a class="text-dark text-center " th:href="@{/authorization}">Уже есть аккаунт</a>
     </div>
     <div class="row justify-content-center registrationPage-messages-area">
-        <div class="col-3" th:insert="registrationErrors :: errors"> </div>
+        <div class="col-3">
+            <ul class="registrationPage-ul" th:each="error : ${registrationErrors}">
+                <li class="text-danger" th:text="${error}"></li>
+            </ul>
+        </div>
     </div>
 </div>
 </body>

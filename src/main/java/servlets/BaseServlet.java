@@ -3,7 +3,7 @@ package servlets;
 import dao.LocationDAO;
 import dao.UserDAO;
 import dao.UserSessionDAO;
-import dto.LocationDTO;
+import exceptions.authExceptions.*;
 import models.User;
 import models.UserSession;
 import org.thymeleaf.TemplateEngine;
@@ -19,6 +19,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Optional;
@@ -34,21 +35,34 @@ public class BaseServlet extends HttpServlet {
     protected OpenWeatherAPIService openWeatherAPIService = new OpenWeatherAPIService();
 
 
-
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         templateEngine = thymeleafUtil.getTemplateEngine(getServletContext());
     }
 
-    protected void clearCookies(HttpServletResponse response) {
-        Cookie cookieUserSession = new Cookie("userSessionID", "");
-        Cookie cookieUserName = new Cookie("userName", "");
-        cookieUserSession.setMaxAge(0);
-        cookieUserName.setMaxAge(0);
-        response.addCookie(cookieUserSession);
-        response.addCookie(cookieUserName);
+    @Override
+    protected void service(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        WebContext ctx = new WebContext(request, response, getServletContext());
+        try {
+            super.service(request, response);
+        } catch (NoResultException | InvalidSearchQueryException e) {
+            response.setStatus(401);
+            ctx.setVariable("error", e.getMessage());
+            templateEngine.process("search", ctx, response.getWriter());
+        } catch (UserDoesNotExistException | InvalidPasswordException e) {
+            response.setStatus(401);
+            ctx.setVariable("authorizationError", e.getMessage());
+            templateEngine.process("authorization", ctx, response.getWriter());
+        } catch (InvalidDataRegistrationException | UserAlreadyExistException e) {
+            response.setStatus(401);
+            ctx.setVariable("registrationErrors", e.getMessage().split("_"));
+            templateEngine.process("registration", ctx, response.getWriter());
+        } catch (Exception e) {
+            ctx.setVariable("error", e.getMessage());
+        }
     }
+
     protected WebContext getCTXForAuthorizeUser(HttpServletRequest request, HttpServletResponse response, Cookie[] cookies) {
         WebContext ctx = new WebContext(request, response, getServletContext());
         String userSessionID = cookies[0].getValue();
@@ -62,5 +76,14 @@ public class BaseServlet extends HttpServlet {
             clearCookies(response);
         }
         return ctx;
+    }
+
+    protected void clearCookies(HttpServletResponse response) {
+        Cookie cookieUserSession = new Cookie("userSessionID", "");
+        Cookie cookieUserName = new Cookie("userName", "");
+        cookieUserSession.setMaxAge(0);
+        cookieUserName.setMaxAge(0);
+        response.addCookie(cookieUserSession);
+        response.addCookie(cookieUserName);
     }
 }

@@ -2,13 +2,12 @@ package dao;
 
 import models.Location;
 import models.User;
-import models.UserSession;
 import org.hibernate.Session;
+import org.hibernate.query.MutationQuery;
 import org.hibernate.query.Query;
 import utils.DBUtil;
 
 import java.util.List;
-import java.util.Optional;
 
 public class LocationDAO {
     public void save(String name, User user, double latitude, double longitude) {
@@ -28,6 +27,17 @@ public class LocationDAO {
             List<Location> locations = query.getResultList();
             session.getTransaction().commit();
             return locations;
+        }
+    }
+
+    public void delete(User user, String locationID) {
+        try (Session session = DBUtil.getSessionFactory().openSession()) {
+            session.beginTransaction();
+            MutationQuery query = session.createMutationQuery("DELETE FROM Location WHERE id = :locationID AND user = :user");
+            query.setParameter("locationID", locationID);
+            query.setParameter("user", user);
+            query.executeUpdate();
+            session.getTransaction().commit();
         }
     }
 }

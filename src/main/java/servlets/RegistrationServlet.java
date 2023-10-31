@@ -1,15 +1,14 @@
 package servlets;
 
-import exceptions.UserAlreadyExistException;
-import org.mindrot.jbcrypt.BCrypt;
+import exceptions.authExceptions.UserAlreadyExistException;
+import exceptions.authExceptions.InvalidDataRegistrationException;
 import org.thymeleaf.context.WebContext;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import javax.servlet.ServletException;
-import javax.servlet.http.*;
-import javax.servlet.annotation.*;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @WebServlet(value = "/registration")
 public class RegistrationServlet extends BaseServlet {
@@ -21,8 +20,9 @@ public class RegistrationServlet extends BaseServlet {
         }
         templateEngine.process("registration", ctx, response.getWriter());
     }
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        List<String> errors = new ArrayList<>();
+
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, InvalidDataRegistrationException, UserAlreadyExistException {
+        StringBuilder errors = new StringBuilder();
 
         String name = request.getParameter("name");
         String password = request.getParameter("password");
@@ -33,19 +33,11 @@ public class RegistrationServlet extends BaseServlet {
 
         WebContext ctx = new WebContext(request, response, getServletContext());
 
-        if (errors.size() == 0) {
-            try {
-                userService.signUp(name, password);
-                ctx.setVariable("successfulRegistrationMessage", "Регистрация успешно завершена, теперь Вы можете войти в аккаунт, используя свои учётные данные");
-                templateEngine.process("successfulRegistration", ctx, response.getWriter());
-            } catch (UserAlreadyExistException e) {
-                errors.add(e.getMessage());
-                ctx.setVariable("registrationErrors", errors);
-                templateEngine.process("registration", ctx, response.getWriter());
-            }
+        if (errors.length() == 0) {
+            userService.signUp(name, password);
+            templateEngine.process("successfulRegistration", ctx, response.getWriter());
         } else {
-            ctx.setVariable("registrationErrors", errors);
-            templateEngine.process("registration", ctx, response.getWriter());
+            throw new InvalidDataRegistrationException(errors.toString());
         }
     }
 }

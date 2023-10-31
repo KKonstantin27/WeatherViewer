@@ -1,14 +1,14 @@
 package dto;
 
 public enum WindDirection {
-    NORTH("Север"),
-    NORTH_EAST("Северо-восток"),
-    EAST("Восток"),
-    SOUTH_EAST("Юго-восток"),
-    SOUTH("Юг"),
-    SOUTH_WEST("Юго-запад"),
-    WEST("Запад"),
-    NORTH_WEST("Северо-запад");
+    NORTH("северный"),
+    NORTH_EAST("северо-восточный"),
+    EAST("восточный"),
+    SOUTH_EAST("юго-восточный"),
+    SOUTH("южный"),
+    SOUTH_WEST("юго-западный"),
+    WEST("западный"),
+    NORTH_WEST("северо-западный");
     private String russianValue;
 
     WindDirection(String russianValue) {

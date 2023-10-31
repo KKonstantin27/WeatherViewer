@@ -1,11 +1,15 @@
 package dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
 import lombok.Getter;
+import models.Location;
 
 @Getter
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class WeatherDTO {
+    private String name;
+    private String country;
     private String description;
     private String icon;
     private String temp;
@@ -13,44 +17,26 @@ public class WeatherDTO {
     private String pressure;
     private String humidity;
     private String visibility;
+    private Location location;
     @JsonProperty("speed")
     private String windSpeed;
     @JsonProperty("deg")
     private String windDirection;
 
-    public void setDescription(String description) {
+    public WeatherDTO(String name, String country, String description, String icon, String temp, String feels_like,
+                      String pressure, String humidity, String visibility, String windSpeed, double windDeg, Location location) {
+        this.name = name;
+        this.country = country;
         this.description = description;
-    }
-
-    public void setIcon(String icon) {
         this.icon = icon;
-    }
-
-    public void setTemp(String temp) {
-        this.temp = temp + "°C";
-    }
-
-    public void setFeels_like(String feels_like) {
-        this.feels_like = feels_like + "°C";
-    }
-
-    public void setPressure(String pressure) {
-        this.pressure = pressure + "гПа";
-    }
-
-    public void setHumidity(String humidity) {
-        this.humidity = humidity +  "%";
-    }
-
-    public void setVisibility(String visibility) {
-        this.visibility = visibility + "км";
-    }
-
-    public void setWindSpeed(String windSpeed) {
-        this.windSpeed = windSpeed + "м/с";
-    }
-
-    public void setWindDirection(String windDeg) {
-        this.windDirection = WindDirection.convertDegreesToDirection(Double.parseDouble(windDeg));
+        this.temp = temp;
+        this.feels_like = feels_like;
+        this.pressure = pressure;
+        this.humidity = humidity;
+        this.visibility = visibility;
+        this.windSpeed = windSpeed;
+        this.windDirection = WindDirection.convertDegreesToDirection(windDeg);
+        this.location = location;
     }
 }
+

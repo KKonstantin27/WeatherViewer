@@ -1,6 +1,6 @@
 package dao;
 
-import exceptions.UserAlreadyExistException;
+import exceptions.authExceptions.UserAlreadyExistException;
 import models.User;
 import org.hibernate.Session;
 import org.hibernate.exception.ConstraintViolationException;

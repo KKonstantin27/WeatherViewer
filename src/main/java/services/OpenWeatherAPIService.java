@@ -7,19 +7,19 @@ import dto.LocationDTO;
 import dto.WeatherDTO;
 import models.Location;
 
-import java.io.DataInput;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.time.temporal.ChronoUnit.SECONDS;
 
 public class OpenWeatherAPIService {
+    private ObjectMapper objectMapper = new ObjectMapper();
+
     public List<LocationDTO> searchLocation(String location) {
         try {
             HttpClient client = HttpClient.newHttpClient();
@@ -30,15 +30,15 @@ public class OpenWeatherAPIService {
                     .build();
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             String responseBody = response.body();
-
-            ObjectMapper objectMapper = new ObjectMapper();
             int responseStatusCode = response.statusCode();
+//            перенеси в валидатор
             if (responseStatusCode == 401) {
 
             } else if (responseStatusCode == 500) {
 
             }
-            return objectMapper.readValue(responseBody,  new TypeReference<>(){});
+            return objectMapper.readValue(responseBody, new TypeReference<>() {
+            });
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (InterruptedException e) {
@@ -56,14 +56,29 @@ public class OpenWeatherAPIService {
                     .build();
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             String responseBody = response.body();
-            ObjectMapper objectMapper = new ObjectMapper();
+
+            JsonNode jsonNode = objectMapper.readTree(responseBody);
             int responseStatusCode = response.statusCode();
             if (responseStatusCode == 401) {
 
             } else if (responseStatusCode == 500) {
 
             }
-            return objectMapper.readValue(responseBody, WeatherDTO.class);
+            WeatherDTO weatherDTO = new WeatherDTO(
+                    jsonNode.get("name").asText(),
+                    jsonNode.get("sys").get("country").asText(),
+                    jsonNode.get("weather").get(0).get("description").asText(),
+                    jsonNode.get("weather").get(0).get("icon").asText(),
+                    jsonNode.get("main").get("temp").asText(),
+                    jsonNode.get("main").get("feels_like").asText(),
+                    jsonNode.get("main").get("pressure").asText(),
+                    jsonNode.get("main").get("humidity").asText(),
+                    jsonNode.get("visibility").asText(),
+                    jsonNode.get("wind").get("speed").asText(),
+                    jsonNode.get("wind").get("deg").asDouble(),
+                    location
+            );
+            return weatherDTO;
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (InterruptedException e) {
