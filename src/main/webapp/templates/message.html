@@ -2,19 +2,19 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Successful registration</title>
+  <title>Message to user</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <script src="https://kit.fontawesome.com/894c362582.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" th:href="@{/css/styles.css}" type="text/css">
 </head>
 <body>
 <div class="fluid-container">
-  <div th:insert="header :: header"> </div>
+  <div class="header-row" th:insert="header :: main-page-return"> </div>
   <div class="row successfulRegistrationPage-main-area">
-    <h2 class="text-dark text-center" >Успешная регистрация</h2>
+    <h2 class="text-dark text-center" th:text="${messageTitle}"></h2>
   </div>
   <div class="row justify-content-center successfulRegistrationPage-text-area">
-    <h4 class="text-dark text-center">Регистрация успешно завершена, теперь Вы можете войти в аккаунт, используя свои учётные данные</h4>
+    <h4 class="text-dark text-center" th:text="${message}"></h4>
   </div>
   <div class="row justify-content-center successfulRegistrationPage-text-area">
     <a th:href="@{/authorization}"><h5 class="text-dark text-center">Войти в аккаунт</h5></a>

@@ -37,14 +37,12 @@
           <element id="library" level="project" name="Maven: com.sun.istack:istack-commons-runtime:4.1.1" />
           <element id="library" level="project" name="Maven: jakarta.inject:jakarta.inject-api:2.0.1" />
           <element id="library" level="project" name="Maven: org.antlr:antlr4-runtime:4.10.1" />
+          <element id="library" level="project" name="Maven: com.h2database:h2:2.2.222" />
           <element id="library" level="project" name="Maven: org.postgresql:postgresql:42.6.0" />
           <element id="library" level="project" name="Maven: org.checkerframework:checker-qual:3.31.0" />
           <element id="library" level="project" name="Maven: com.github.t3hnar:scala-bcrypt_2.13:4.3.0" />
           <element id="library" level="project" name="Maven: org.scala-lang:scala-library:2.13.3" />
           <element id="library" level="project" name="Maven: de.svenkubiak:jBCrypt:0.4.1" />
-          <element id="library" level="project" name="Maven: org.apache.httpcomponents.client5:httpclient5:5.2.1" />
-          <element id="library" level="project" name="Maven: org.apache.httpcomponents.core5:httpcore5:5.2" />
-          <element id="library" level="project" name="Maven: org.apache.httpcomponents.core5:httpcore5-h2:5.2" />
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.15.3" />
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.15.3" />
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-core:2.15.3" />

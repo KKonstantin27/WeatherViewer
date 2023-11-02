@@ -1,4 +1,4 @@
-package exceptions.authExceptions;
+package exceptions.openWeaterAPIExceptions;
 
 import javax.servlet.ServletException;
 

@@ -1,5 +1,7 @@
 package listeners;
 
+import dao.UserSessionDAO;
+import models.UserSession;
 import utils.DBUtil;
 
 import javax.servlet.ServletContext;
@@ -13,6 +15,7 @@ public class ContextListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent sce) {
         ServletContext sc = sce.getServletContext();
         DBUtil.buildSessionFactory();
+        UserSession.clearOldSessions();
         sc.setRequestCharacterEncoding("UTF-8");
         sc.setResponseCharacterEncoding("UTF-8");
     }

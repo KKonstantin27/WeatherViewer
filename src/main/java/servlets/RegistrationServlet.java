@@ -34,8 +34,10 @@ public class RegistrationServlet extends BaseServlet {
         WebContext ctx = new WebContext(request, response, getServletContext());
 
         if (errors.length() == 0) {
-            userService.signUp(name, password);
-            templateEngine.process("successfulRegistration", ctx, response.getWriter());
+            authService.signUp(name, password);
+            ctx.setVariable("messageTitle", "Успешная регистрация");
+            ctx.setVariable("message", "Регистрация успешно завершена, теперь Вы можете войти в аккаунт, используя свои учётные данные");
+            templateEngine.process("message", ctx, response.getWriter());
         } else {
             throw new InvalidDataRegistrationException(errors.toString());
         }

@@ -1,5 +1,6 @@
 package servlets;
 
+import exceptions.authExceptions.SessionExpiredException;
 import exceptions.authExceptions.UserDoesNotExistException;
 import exceptions.authExceptions.InvalidPasswordException;
 import models.User;
@@ -24,14 +25,12 @@ public class AuthorizationServlet extends BaseServlet {
         templateEngine.process("authorization", ctx, response.getWriter());
     }
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, UserDoesNotExistException, InvalidPasswordException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, UserDoesNotExistException, InvalidPasswordException, SessionExpiredException {
         String name = request.getParameter("name");
         String password = request.getParameter("password");
-        User user = userService.signIn(name, password);
-        Optional<UserSession> userSessionOptional = userSessionDAO.getByUser(user);
-        UserSession userSession = userSessionOptional.orElseGet(() -> userSessionDAO.save(user));
-        Cookie cookieUserSession = new Cookie("userSessionID", String.valueOf(userSession.getId()));
-        Cookie cookieUserName = new Cookie("userName", String.valueOf(user.getName()));
+        String userSessionID = authService.signIn(name, password);
+        Cookie cookieUserSession = new Cookie("userSessionID", userSessionID);
+        Cookie cookieUserName = new Cookie("userName", name);
         cookieUserSession.setMaxAge(-1);
         cookieUserName.setMaxAge(-1);
         response.addCookie(cookieUserSession);

@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -30,22 +29,33 @@ public class UserSession {
     @Column(name = "expires_at", nullable = false)
     private ZonedDateTime expiresAt;
 
+    private static long SESSION_DURATION_IN_MINUTES = 480;
+    private static long OLD_SESSIONS_CLEANING_PERIOD = 480;
+
     public UserSession(User user) {
         this.id = UUID.randomUUID().toString();
         this.user = user;
-        this.expiresAt = ZonedDateTime.now(ZoneId.of("UTC")).plusHours(8);
+        this.expiresAt = ZonedDateTime.now(ZoneId.of("UTC")).plusMinutes(SESSION_DURATION_IN_MINUTES);
     }
 
     public void updateExpiresAt() {
-        this.expiresAt = expiresAt.plusHours(8);
+        this.expiresAt = ZonedDateTime.now(ZoneId.of("UTC")).plusMinutes(SESSION_DURATION_IN_MINUTES);
     }
 
-    public void clearOldSessions() {
+    public static void clearOldSessions() {
         ScheduledExecutorService pool = Executors.newScheduledThreadPool(1);
         Runnable task = () -> {
             UserSessionDAO userSessionDAO = new UserSessionDAO();
             userSessionDAO.delete();
         };
-        pool.scheduleAtFixedRate(task, 0, 8, TimeUnit.HOURS);
+        pool.scheduleAtFixedRate(task, OLD_SESSIONS_CLEANING_PERIOD, OLD_SESSIONS_CLEANING_PERIOD, TimeUnit.MINUTES);
+    }
+
+    public static void setSessionDurationInMinutes(long sessionDurationInMinutes) {
+        SESSION_DURATION_IN_MINUTES = sessionDurationInMinutes;
+    }
+
+    public static void setOldSessionsCleaningPeriod(long oldSessionsCleaningPeriod) {
+        OLD_SESSIONS_CLEANING_PERIOD = oldSessionsCleaningPeriod;
     }
 }

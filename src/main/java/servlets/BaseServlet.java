@@ -4,12 +4,14 @@ import dao.LocationDAO;
 import dao.UserDAO;
 import dao.UserSessionDAO;
 import exceptions.authExceptions.*;
-import models.User;
-import models.UserSession;
+import exceptions.openWeaterAPIExceptions.InvalidSearchQueryException;
+import exceptions.openWeaterAPIExceptions.NoResultException;
+import exceptions.openWeaterAPIExceptions.OpenWeatherAPIUnavailableException;
+import exceptions.openWeaterAPIExceptions.RequestLimitExceededException;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import services.OpenWeatherAPIService;
-import services.UserService;
+import services.AuthService;
 import utils.ThymeleafUtil;
 import utils.Validator;
 
@@ -20,15 +22,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.Optional;
 
 public class BaseServlet extends HttpServlet {
     private ThymeleafUtil thymeleafUtil = new ThymeleafUtil();
     protected TemplateEngine templateEngine;
     protected Validator validator = new Validator();
-    protected UserService userService = new UserService();
+    protected AuthService authService = new AuthService();
     protected UserDAO userDAO = new UserDAO();
     protected LocationDAO locationDAO = new LocationDAO();
     protected UserSessionDAO userSessionDAO = new UserSessionDAO();
@@ -47,34 +46,39 @@ public class BaseServlet extends HttpServlet {
         try {
             super.service(request, response);
         } catch (NoResultException | InvalidSearchQueryException e) {
-            response.setStatus(401);
+            response.setStatus(404);
             ctx.setVariable("error", e.getMessage());
             templateEngine.process("search", ctx, response.getWriter());
         } catch (UserDoesNotExistException | InvalidPasswordException e) {
-            response.setStatus(401);
+            response.setStatus(404);
             ctx.setVariable("authorizationError", e.getMessage());
             templateEngine.process("authorization", ctx, response.getWriter());
         } catch (InvalidDataRegistrationException | UserAlreadyExistException e) {
-            response.setStatus(401);
+            response.setStatus(400);
             ctx.setVariable("registrationErrors", e.getMessage().split("_"));
             templateEngine.process("registration", ctx, response.getWriter());
-        } catch (Exception e) {
+        } catch (SessionExpiredException e) {
+            response.setStatus(40);
+            ctx.setVariable("messageTitle", "Сессия истекла");
+            ctx.setVariable("message", e.getMessage());
+            clearCookies(response);
+            templateEngine.process("message", ctx, response.getWriter());
+        } catch (RequestLimitExceededException | OpenWeatherAPIUnavailableException e) {
+            response.setStatus(500);
+            ctx.setVariable("error", e.getMessage());
+            templateEngine.process("errorPage", ctx, response.getWriter());
+        } catch (ServletException e) {
             ctx.setVariable("error", e.getMessage());
         }
     }
 
-    protected WebContext getCTXForAuthorizeUser(HttpServletRequest request, HttpServletResponse response, Cookie[] cookies) {
+    protected WebContext getCTXForAuthorizeUser(HttpServletRequest request, HttpServletResponse response, Cookie[] cookies) throws SessionExpiredException {
         WebContext ctx = new WebContext(request, response, getServletContext());
         String userSessionID = cookies[0].getValue();
         String userName = cookies[1].getValue();
-        User user = userDAO.getByName(userName).get();
-        Optional<UserSession> userSessionOptional = userSessionDAO.getByUser(user);
-        if (userSessionOptional.isPresent() && userSessionOptional.get().getExpiresAt().isAfter(ZonedDateTime.now(ZoneId.of("UTC")))) {
-            ctx.setVariable("userSessionID", userSessionID);
-            ctx.setVariable("userName", userName);
-        } else {
-            clearCookies(response);
-        }
+        userSessionDAO.getBySessionID(userSessionID);
+        ctx.setVariable("userSessionID", userSessionID);
+        ctx.setVariable("userName", userName);
         return ctx;
     }
 

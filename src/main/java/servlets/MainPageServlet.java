@@ -1,6 +1,10 @@
 package servlets;
 
 import dto.WeatherDTO;
+import exceptions.authExceptions.SessionExpiredException;
+import exceptions.openWeaterAPIExceptions.InvalidSearchQueryException;
+import exceptions.openWeaterAPIExceptions.OpenWeatherAPIUnavailableException;
+import exceptions.openWeaterAPIExceptions.RequestLimitExceededException;
 import models.Location;
 import models.User;
 import org.thymeleaf.context.WebContext;
@@ -18,7 +22,7 @@ import java.util.List;
 @WebServlet(value = "")
 public class MainPageServlet extends BaseServlet {
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, OpenWeatherAPIUnavailableException, InvalidSearchQueryException, RequestLimitExceededException, SessionExpiredException {
         Cookie[] cookies = request.getCookies();
         WebContext ctx = new WebContext(request, response, getServletContext());
         if (cookies != null) {

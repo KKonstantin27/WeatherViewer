@@ -1,8 +1,11 @@
 package servlets;
 
 import dto.LocationDTO;
-import exceptions.authExceptions.InvalidSearchQueryException;
-import exceptions.authExceptions.NoResultException;
+import exceptions.authExceptions.SessionExpiredException;
+import exceptions.openWeaterAPIExceptions.InvalidSearchQueryException;
+import exceptions.openWeaterAPIExceptions.NoResultException;
+import exceptions.openWeaterAPIExceptions.OpenWeatherAPIUnavailableException;
+import exceptions.openWeaterAPIExceptions.RequestLimitExceededException;
 import models.User;
 import org.thymeleaf.context.WebContext;
 
@@ -15,7 +18,7 @@ import java.util.List;
 
 @WebServlet(value = "/search")
 public class SearchServlet extends BaseServlet {
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, NoResultException, InvalidSearchQueryException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, NoResultException, InvalidSearchQueryException, OpenWeatherAPIUnavailableException, RequestLimitExceededException, SessionExpiredException {
         Cookie[] cookies = request.getCookies();
         String locationName = request.getParameter("location-name").replace(' ', '_');
         if (!validator.isValidSearchQuery(locationName)) {

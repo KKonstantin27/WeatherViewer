@@ -5,10 +5,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dto.LocationDTO;
 import dto.WeatherDTO;
+import exceptions.openWeaterAPIExceptions.InvalidSearchQueryException;
+import exceptions.openWeaterAPIExceptions.OpenWeatherAPIUnavailableException;
+import exceptions.openWeaterAPIExceptions.RequestLimitExceededException;
 import models.Location;
 
 import java.io.IOException;
 import java.net.URI;
+
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -20,7 +24,7 @@ import static java.time.temporal.ChronoUnit.SECONDS;
 public class OpenWeatherAPIService {
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    public List<LocationDTO> searchLocation(String location) {
+    public List<LocationDTO> searchLocation(String location) throws OpenWeatherAPIUnavailableException, InvalidSearchQueryException, RequestLimitExceededException {
         try {
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
@@ -30,23 +34,15 @@ public class OpenWeatherAPIService {
                     .build();
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             String responseBody = response.body();
-            int responseStatusCode = response.statusCode();
-//            перенеси в валидатор
-            if (responseStatusCode == 401) {
-
-            } else if (responseStatusCode == 500) {
-
-            }
+            checkResponseStatusCode(response.statusCode());
             return objectMapper.readValue(responseBody, new TypeReference<>() {
             });
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public WeatherDTO getWeatherForLocation(Location location) {
+    public WeatherDTO getWeatherForLocation(Location location) throws OpenWeatherAPIUnavailableException, InvalidSearchQueryException, RequestLimitExceededException {
         try {
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
@@ -58,12 +54,8 @@ public class OpenWeatherAPIService {
             String responseBody = response.body();
 
             JsonNode jsonNode = objectMapper.readTree(responseBody);
-            int responseStatusCode = response.statusCode();
-            if (responseStatusCode == 401) {
+            checkResponseStatusCode(response.statusCode());
 
-            } else if (responseStatusCode == 500) {
-
-            }
             WeatherDTO weatherDTO = new WeatherDTO(
                     jsonNode.get("name").asText(),
                     jsonNode.get("sys").get("country").asText(),
@@ -76,13 +68,19 @@ public class OpenWeatherAPIService {
                     jsonNode.get("visibility").asText(),
                     jsonNode.get("wind").get("speed").asText(),
                     jsonNode.get("wind").get("deg").asDouble(),
-                    location
-            );
+                    location);
             return weatherDTO;
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+        }
+    }
+    private void checkResponseStatusCode(int responseStatusCode) throws OpenWeatherAPIUnavailableException, InvalidSearchQueryException, RequestLimitExceededException {
+        if (responseStatusCode == 404) {
+            throw new InvalidSearchQueryException("Некорректный поисковый запрос");
+        } else if (responseStatusCode == 409) {
+            throw new RequestLimitExceededException("Превышен лимит запросов к OpenWeatherAPI, попробуйте позже");
+        } else if (responseStatusCode >= 500 && responseStatusCode <= 504) {
+            throw new OpenWeatherAPIUnavailableException("Сервис временно недоступен, попробуйте позже");
         }
     }
 }

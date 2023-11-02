@@ -31,6 +31,6 @@ public class Validator {
     }
 
     public boolean isValidSearchQuery(String locationName) {
-        return locationName.matches("^[\\w\\-]+$");
+        return locationName.matches("^[\\p{L}\\-_]+$");
     }
 }

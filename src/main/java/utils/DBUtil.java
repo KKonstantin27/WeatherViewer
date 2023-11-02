@@ -1,11 +1,13 @@
 package utils;
 
+import lombok.Data;
 import models.Location;
 import models.User;
 import models.UserSession;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+@Data
 public class DBUtil {
     private static SessionFactory sessionFactory;
 
@@ -17,7 +19,12 @@ public class DBUtil {
         }
     }
 
+
     public static SessionFactory getSessionFactory() {
         return sessionFactory;
+    }
+
+    public static void setSessionFactory(SessionFactory sessionFactory) {
+        DBUtil.sessionFactory = sessionFactory;
     }
 }

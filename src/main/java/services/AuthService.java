@@ -6,11 +6,12 @@ import exceptions.authExceptions.UserAlreadyExistException;
 import exceptions.authExceptions.UserDoesNotExistException;
 import exceptions.authExceptions.InvalidPasswordException;
 import models.User;
+import models.UserSession;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.Optional;
 
-public class UserService {
+public class AuthService {
     private UserDAO userDAO = new UserDAO();
     private UserSessionDAO userSessionDAO = new UserSessionDAO();
 
@@ -18,13 +19,15 @@ public class UserService {
         userDAO.save(name, BCrypt.hashpw(password, BCrypt.gensalt()));
     }
 
-    public User signIn(String name, String password) throws InvalidPasswordException, UserDoesNotExistException {
+    public String signIn(String name, String password) throws InvalidPasswordException, UserDoesNotExistException {
         Optional<User> userOptional = userDAO.getByName(name);
         User user = userOptional.orElseThrow(() -> new UserDoesNotExistException("Пользователь не найден"));
         if (!BCrypt.checkpw(password, user.getPassword())) {
             throw new InvalidPasswordException("Неверный пароль");
         }
-        return user;
+        Optional<UserSession> userSessionOptional = userSessionDAO.getByUser(user);
+        UserSession userSession = userSessionOptional.orElseGet(() -> userSessionDAO.save(user));
+        return userSession.getId();
     }
 
     public void signOut(User user, String userSessionID) {
