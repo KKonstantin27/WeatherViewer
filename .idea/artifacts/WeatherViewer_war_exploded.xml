@@ -14,6 +14,7 @@
           <element id="module-output" name="WeatherViewer" />
         </element>
         <element id="directory" name="lib">
+          <element id="library" level="project" name="Maven: net.bytebuddy:byte-buddy:1.14.8" />
           <element id="library" level="project" name="Maven: org.thymeleaf:thymeleaf:3.0.12.RELEASE" />
           <element id="library" level="project" name="Maven: ognl:ognl:3.1.26" />
           <element id="library" level="project" name="Maven: org.javassist:javassist:3.20.0-GA" />
@@ -27,7 +28,6 @@
           <element id="library" level="project" name="Maven: org.hibernate.common:hibernate-commons-annotations:6.0.6.Final" />
           <element id="library" level="project" name="Maven: io.smallrye:jandex:3.1.2" />
           <element id="library" level="project" name="Maven: com.fasterxml:classmate:1.5.1" />
-          <element id="library" level="project" name="Maven: net.bytebuddy:byte-buddy:1.14.7" />
           <element id="library" level="project" name="Maven: jakarta.xml.bind:jakarta.xml.bind-api:4.0.0" />
           <element id="library" level="project" name="Maven: jakarta.activation:jakarta.activation-api:2.1.0" />
           <element id="library" level="project" name="Maven: org.glassfish.jaxb:jaxb-runtime:4.0.2" />

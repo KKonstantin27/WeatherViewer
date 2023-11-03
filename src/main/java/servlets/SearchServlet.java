@@ -29,9 +29,6 @@ public class SearchServlet extends BaseServlet {
         if (cookies != null) {
             ctx = getCTXForAuthorizeUser(request, response, cookies);
         }
-        if (locations.isEmpty()) {
-            throw new NoResultException("По Вашему запросу локаций не найдено");
-        }
         ctx.setVariable("locations", locations);
         templateEngine.process("search", ctx, response.getWriter());
     }
