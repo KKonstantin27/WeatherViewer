@@ -1,6 +1,5 @@
 import dto.LocationDTO;
 import dto.WeatherDTO;
-import exceptions.authExceptions.UserDoesNotExistException;
 import exceptions.openWeaterAPIExceptions.InvalidSearchQueryException;
 import exceptions.openWeaterAPIExceptions.NoResultException;
 import exceptions.openWeaterAPIExceptions.OpenWeatherAPIUnavailableException;
@@ -10,9 +9,7 @@ import models.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import services.OpenWeatherAPIService;
 
@@ -21,7 +18,11 @@ import java.net.http.HttpClient;
 import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -58,10 +59,25 @@ public class OpenWeatherAPITest {
         String weatherResponseMock = Files.readString(Path.of("src/test/resources/weather_response_mock.json"));
         when(response.body()).thenReturn(weatherResponseMock);
         User testUser = new User("TestName", "TestPassword");
-        Location targetLocation = new Location("Москва", testUser, 55.7504461, 37.6174943);
+        Location targetLocation = new Location("Moscow", testUser, 55.7504461, 37.6174943);
         WeatherDTO weatherDTO = openWeatherAPIService.getWeatherForLocation(targetLocation);
-        Location locationFromWeatherDTO = weatherDTO.getLocation();
-        Assertions.assertEquals(targetLocation, locationFromWeatherDTO);
+        Assertions.assertEquals("RU", weatherDTO.getCountry());
+        Assertions.assertEquals(ZonedDateTime.now(ZoneId.of("Europe/Moscow")).format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm", Locale.getDefault())),
+                weatherDTO.getCurrentLocalDateTime());
+        Assertions.assertEquals("небольшая облачность", weatherDTO.getDescription());
+        Assertions.assertEquals("02n", weatherDTO.getIcon());
+        Assertions.assertEquals("2.32", weatherDTO.getTemp());
+        Assertions.assertEquals("0.3", weatherDTO.getFeels_like());
+        Assertions.assertEquals("1.96", weatherDTO.getMin_temp());
+        Assertions.assertEquals("3.17", weatherDTO.getMax_temp());
+        Assertions.assertEquals("1014", weatherDTO.getPressure());
+        Assertions.assertEquals("85", weatherDTO.getHumidity());
+        Assertions.assertEquals("10000", weatherDTO.getVisibility());
+        Assertions.assertEquals("1.95", weatherDTO.getWindSpeed());
+        Assertions.assertEquals("западный", weatherDTO.getWindDirection());
+        Assertions.assertEquals("07:38", weatherDTO.getSunriseTime());
+        Assertions.assertEquals("16:47", weatherDTO.getSunsetTime());
+        Assertions.assertEquals(targetLocation, weatherDTO.getLocation());
     }
 
     @Test
@@ -168,5 +184,4 @@ public class OpenWeatherAPITest {
             openWeatherAPIService.getWeatherForLocation(new Location());
         });
     }
-
 }

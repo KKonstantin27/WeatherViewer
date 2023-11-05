@@ -23,26 +23,12 @@ public class UserSessionDAO {
             if (userSessionOptional.isEmpty() || (userSessionOptional.get().getExpiresAt().isBefore(ZonedDateTime.now(ZoneId.of("UTC"))))) {
                 throw new SessionExpiredException("Срок действия сессии истёк, необходима повторная авторизация");
             } else {
-//              Стоит ли убрать обновление сессии?
                 userSessionOptional.get().updateExpiresAt();
             }
             session.getTransaction().commit();
             return userSessionOptional.get();
         }
     }
-
-    public Optional<UserSession> getByUser(User user) {
-        try (Session session = DBUtil.getSessionFactory().openSession()) {
-            session.beginTransaction();
-            Query<UserSession> query = session.createQuery("FROM UserSession WHERE user = :user AND expiresAt > :currentDateTime", UserSession.class);
-            query.setParameter("user", user);
-            query.setParameter("currentDateTime", ZonedDateTime.now(ZoneId.of("UTC")));
-            Optional<UserSession> userSessionOptional = query.uniqueResultOptional();
-            userSessionOptional.ifPresent(UserSession::updateExpiresAt);
-            session.getTransaction().commit();
-            return userSessionOptional;
-            }
-        }
 
     public UserSession save(User user) {
         UserSession userSession;
@@ -55,11 +41,10 @@ public class UserSessionDAO {
         return userSession;
     }
 
-    public void delete(User user, String userSessionID) {
+    public void delete(String userSessionID) {
         try (Session session = DBUtil.getSessionFactory().openSession()) {
             session.beginTransaction();
-            MutationQuery query = session.createMutationQuery("DELETE FROM UserSession WHERE user = :user AND id = :userSessionID");
-            query.setParameter("user", user);
+            MutationQuery query = session.createMutationQuery("DELETE FROM UserSession WHERE id = :userSessionID");
             query.setParameter("userSessionID", userSessionID);
             query.executeUpdate();
             session.getTransaction().commit();

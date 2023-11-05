@@ -10,8 +10,8 @@ import exceptions.openWeaterAPIExceptions.OpenWeatherAPIUnavailableException;
 import exceptions.openWeaterAPIExceptions.RequestLimitExceededException;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
-import services.OpenWeatherAPIService;
 import services.AuthService;
+import services.OpenWeatherAPIService;
 import utils.ThymeleafUtil;
 import utils.Validator;
 
@@ -58,7 +58,7 @@ public class BaseServlet extends HttpServlet {
             ctx.setVariable("registrationErrors", e.getMessage().split("_"));
             templateEngine.process("registration", ctx, response.getWriter());
         } catch (SessionExpiredException e) {
-            response.setStatus(40);
+            response.setStatus(401);
             ctx.setVariable("messageTitle", "Сессия истекла");
             ctx.setVariable("message", e.getMessage());
             clearCookies(response);
@@ -69,6 +69,7 @@ public class BaseServlet extends HttpServlet {
             templateEngine.process("errorPage", ctx, response.getWriter());
         } catch (ServletException e) {
             ctx.setVariable("error", e.getMessage());
+            templateEngine.process("errorPage", ctx, response.getWriter());
         }
     }
 

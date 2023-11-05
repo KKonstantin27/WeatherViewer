@@ -8,20 +8,20 @@
 </head>
 <body>
 <div class="col-4 justify-content-start align-items-center d-flex" th:fragment="main-page-return">
-    <a th:href="@{/}" class="text-warning text-decoration-none"><h3 class="text-warning mb-0"><i class="fa fa-solid fa-house fa-fw" style="color: #fdc007;"></i>WEATHER VIEWER</h3></a>
+    <a th:href="@{/}" class="text-decoration-none"><h3 class="yellow-icon mb-0"><i class="fa fa-solid fa-house fa-fw yellow-icon"></i>WEATHER VIEWER</h3></a>
 </div>
 <div class="col-4 btn-group justify-content-end" th:fragment="unauthorized-header">
     <form method="get" th:action="@{/authorization}">
-        <button class="btn btn-dark header-button"><i class="fa fa-solid fa-user fa-fw" style="color: #ffffff;"></i>Авторизация</button>
+        <button class="btn btn-dark header-button"><i class="fa fa-solid fa-user fa-fw white-icon"></i>Авторизация</button>
     </form>
     <form method="get" th:action="@{/registration}">
-        <button class="btn btn-dark header-button"><i class="fa fa-solid fa-user-pen fa-fw" style="color: #ffffff;"></i>Регистрация</button>
+        <button class="btn btn-dark header-button"><i class="fa fa-solid fa-user-pen fa-fw white-icon"></i>Регистрация</button>
     </form>
 </div>
 <div class="col-4 btn-group justify-content-end align-items-center d-flex" th:fragment="authorized-header">
     <p class="text-center text-light pe-3 mb-0 h4" th:text="${userName}"> </p>
     <form method="post" th:action="@{/signOut}">
-        <button class="btn btn-dark header-button"> <i class="fa fa-solid fa-right-to-bracket fa-fw" style="color: #ffffff;"></i>Выйти из аккаунта</button>
+        <button class="btn btn-dark header-button"> <i class="fa fa-solid fa-right-to-bracket fa-fw white-icon"></i>Выйти из аккаунта</button>
     </form>
 </div>
 </body>

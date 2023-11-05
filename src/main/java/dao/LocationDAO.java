@@ -10,10 +10,10 @@ import utils.DBUtil;
 import java.util.List;
 
 public class LocationDAO {
-    public void save(String name, User user, double latitude, double longitude) {
+    public void save(String locationName, User user, double latitude, double longitude) {
         try (Session session = DBUtil.getSessionFactory().openSession()) {
             session.beginTransaction();
-            Location location = new Location(name, user, latitude, longitude);
+            Location location = new Location(locationName, user, latitude, longitude);
             session.persist(location);
             session.getTransaction().commit();
         }
@@ -30,12 +30,11 @@ public class LocationDAO {
         }
     }
 
-    public void delete(User user, String locationID) {
+    public void delete(String locationID) {
         try (Session session = DBUtil.getSessionFactory().openSession()) {
             session.beginTransaction();
-            MutationQuery query = session.createMutationQuery("DELETE FROM Location WHERE id = :locationID AND user = :user");
+            MutationQuery query = session.createMutationQuery("DELETE FROM Location WHERE id = :locationID");
             query.setParameter("locationID", locationID);
-            query.setParameter("user", user);
             query.executeUpdate();
             session.getTransaction().commit();
         }

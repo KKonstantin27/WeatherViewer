@@ -7,7 +7,6 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.hibernate.query.Query;
 import utils.DBUtil;
 
-import java.util.List;
 import java.util.Optional;
 
 public class UserDAO {

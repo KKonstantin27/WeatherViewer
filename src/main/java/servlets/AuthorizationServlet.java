@@ -1,10 +1,7 @@
 package servlets;
 
-import exceptions.authExceptions.SessionExpiredException;
-import exceptions.authExceptions.UserDoesNotExistException;
 import exceptions.authExceptions.InvalidPasswordException;
-import models.User;
-import models.UserSession;
+import exceptions.authExceptions.UserDoesNotExistException;
 import org.thymeleaf.context.WebContext;
 
 import javax.servlet.annotation.WebServlet;
@@ -12,7 +9,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Optional;
 
 @WebServlet(value = "/authorization")
 public class AuthorizationServlet extends BaseServlet {
@@ -25,7 +21,7 @@ public class AuthorizationServlet extends BaseServlet {
         templateEngine.process("authorization", ctx, response.getWriter());
     }
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, UserDoesNotExistException, InvalidPasswordException, SessionExpiredException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, UserDoesNotExistException, InvalidPasswordException {
         String name = request.getParameter("name");
         String password = request.getParameter("password");
         String userSessionID = authService.signIn(name, password);

@@ -13,12 +13,14 @@ public class DBUtil {
 
     public static void buildSessionFactory() {
         if (sessionFactory == null) {
-            Configuration configuration = new Configuration();
-            configuration.configure().addAnnotatedClass(User.class).addAnnotatedClass(Location.class).addAnnotatedClass(UserSession.class);
+            Configuration configuration = new Configuration()
+                    .configure()
+                    .addAnnotatedClass(User.class)
+                    .addAnnotatedClass(Location.class)
+                    .addAnnotatedClass(UserSession.class);
             sessionFactory = configuration.buildSessionFactory();
         }
     }
-
 
     public static SessionFactory getSessionFactory() {
         return sessionFactory;

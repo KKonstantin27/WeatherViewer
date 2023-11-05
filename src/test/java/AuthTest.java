@@ -1,6 +1,6 @@
-import dao.UserDAO;
 import dao.UserSessionDAO;
 import exceptions.authExceptions.InvalidPasswordException;
+import exceptions.authExceptions.SessionExpiredException;
 import exceptions.authExceptions.UserAlreadyExistException;
 import exceptions.authExceptions.UserDoesNotExistException;
 import models.Location;
@@ -22,19 +22,16 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class AuthTest {
     private AuthService authService = new AuthService();
-    private UserDAO userDAO = new UserDAO();
-    private UserSessionDAO userSessionDAO = new UserSessionDAO();
 
     @BeforeAll
     public static void configureTestEnvironment() {
-        Configuration configuration = new Configuration();
-        configuration.configure("hibernateTest.cfg.xml")
+        Configuration configuration = new Configuration()
+                .configure("hibernateTest.cfg.xml")
                 .addAnnotatedClass(User.class)
                 .addAnnotatedClass(Location.class)
                 .addAnnotatedClass(UserSession.class);
         DBUtil.setSessionFactory(configuration.buildSessionFactory());
-        UserSession.setSessionDurationInMinutes(5);
-        UserSession.setOldSessionsCleaningPeriod(10);
+        UserSession.setSessionDurationInMinutes(0);
     }
 
     @BeforeEach
@@ -78,8 +75,7 @@ public class AuthTest {
     public void testSignOut() throws InvalidPasswordException, UserDoesNotExistException, UserAlreadyExistException {
         authService.signUp("TestName", "TestPassword");
         String userSessionID = authService.signIn("TestName", "TestPassword");
-        User user = userDAO.getByName("TestName").get();
-        authService.signOut(user, userSessionID);
+        authService.signOut(userSessionID);
         List<UserSession> userSessions;
         try (Session session = DBUtil.getSessionFactory().openSession()) {
             session.beginTransaction();
@@ -89,17 +85,17 @@ public class AuthTest {
         }
         Assertions.assertEquals(0, userSessions.size());
     }
+
     @Test
     public void testUserAlreadyExistException() throws UserAlreadyExistException {
         authService.signUp("TestName", "TestPassword");
         UserAlreadyExistException e = assertThrows(UserAlreadyExistException.class, () -> {
-            authService.signUp("TestName", "TestPassword");
+            authService.signUp("TestName", "AnotherTestPassword");
         });
     }
 
     @Test
-    public void testUserDoesNotExistException() throws UserAlreadyExistException {
-        authService.signUp("TestName", "TestPassword");
+    public void testUserDoesNotExistException() {
         UserDoesNotExistException e = assertThrows(UserDoesNotExistException.class, () -> {
             authService.signIn("NonExistTestName", "TestPassword");
         });
@@ -110,6 +106,16 @@ public class AuthTest {
         authService.signUp("TestName", "TestPassword");
         InvalidPasswordException e = assertThrows(InvalidPasswordException.class, () -> {
             authService.signIn("TestName", "InvalidTestPassword");
+        });
+    }
+
+    @Test
+    public void testSessionExpiredException() throws UserAlreadyExistException, InvalidPasswordException, UserDoesNotExistException {
+        UserSessionDAO userSessionDAO = new UserSessionDAO();
+        authService.signUp("TestName", "TestPassword");
+        String userSessionID = authService.signIn("TestName", "TestPassword");
+        SessionExpiredException e = assertThrows(SessionExpiredException.class, () -> {
+            userSessionDAO.getBySessionID(userSessionID);
         });
     }
 }

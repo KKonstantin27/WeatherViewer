@@ -20,7 +20,7 @@ import java.util.List;
 public class SearchServlet extends BaseServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, NoResultException, InvalidSearchQueryException, OpenWeatherAPIUnavailableException, RequestLimitExceededException, SessionExpiredException {
         Cookie[] cookies = request.getCookies();
-        String locationName = request.getParameter("location-name").replace(' ', '_');
+        String locationName = request.getParameter("location-name-search").replace(' ', '_');
         if (!validator.isValidSearchQuery(locationName)) {
             throw new InvalidSearchQueryException("Некорректные символы в поисковом запросе");
         }
@@ -36,7 +36,7 @@ public class SearchServlet extends BaseServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Cookie[] cookies = request.getCookies();
         User user = userDAO.getByName(cookies[1].getValue()).get();
-        String name = request.getParameter("name");
+        String name = request.getParameter("location-name");
         double latitude = Double.parseDouble(request.getParameter("latitude"));
         double longitude = Double.parseDouble(request.getParameter("longitude"));
         locationDAO.save(name, user, latitude, longitude);

@@ -9,12 +9,10 @@ import exceptions.openWeaterAPIExceptions.InvalidSearchQueryException;
 import exceptions.openWeaterAPIExceptions.NoResultException;
 import exceptions.openWeaterAPIExceptions.OpenWeatherAPIUnavailableException;
 import exceptions.openWeaterAPIExceptions.RequestLimitExceededException;
-import lombok.NoArgsConstructor;
 import models.Location;
 
 import java.io.IOException;
 import java.net.URI;
-
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -37,7 +35,8 @@ public class OpenWeatherAPIService {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             String responseBody = response.body();
             checkResponseStatusCode(response.statusCode());
-            List<LocationDTO> locations = objectMapper.readValue(responseBody, new TypeReference<>() {});
+            List<LocationDTO> locations = objectMapper.readValue(responseBody, new TypeReference<>() {
+            });
             if (locations.isEmpty()) {
                 throw new NoResultException("По Вашему запросу локаций не найдено");
             }
@@ -56,28 +55,32 @@ public class OpenWeatherAPIService {
                     .build();
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             String responseBody = response.body();
-
             checkResponseStatusCode(response.statusCode());
             JsonNode jsonNode = objectMapper.readTree(responseBody);
 
-            WeatherDTO weatherDTO = new WeatherDTO(
-                    jsonNode.get("name").asText(),
+            return new WeatherDTO(
                     jsonNode.get("sys").get("country").asText(),
+                    jsonNode.get("timezone").asInt(),
                     jsonNode.get("weather").get(0).get("description").asText(),
                     jsonNode.get("weather").get(0).get("icon").asText(),
                     jsonNode.get("main").get("temp").asText(),
                     jsonNode.get("main").get("feels_like").asText(),
+                    jsonNode.get("main").get("temp_min").asText(),
+                    jsonNode.get("main").get("temp_max").asText(),
                     jsonNode.get("main").get("pressure").asText(),
                     jsonNode.get("main").get("humidity").asText(),
                     jsonNode.get("visibility").asText(),
                     jsonNode.get("wind").get("speed").asText(),
                     jsonNode.get("wind").get("deg").asDouble(),
+                    jsonNode.get("sys").get("sunrise").asLong(),
+                    jsonNode.get("sys").get("sunset").asLong(),
                     location);
-            return weatherDTO;
+
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
+
     private void checkResponseStatusCode(int responseStatusCode) throws OpenWeatherAPIUnavailableException, InvalidSearchQueryException, RequestLimitExceededException {
         if (responseStatusCode == 404) {
             throw new InvalidSearchQueryException("Некорректный поисковый запрос");
@@ -91,6 +94,7 @@ public class OpenWeatherAPIService {
     public OpenWeatherAPIService() {
         this.client = HttpClient.newHttpClient();
     }
+
     public OpenWeatherAPIService(HttpClient client) {
         this.client = client;
     }

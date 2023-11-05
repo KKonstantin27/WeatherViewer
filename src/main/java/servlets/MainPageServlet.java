@@ -14,8 +14,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,11 +39,8 @@ public class MainPageServlet extends BaseServlet {
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Cookie[] cookies = request.getCookies();
-        String userName = cookies[1].getValue();
-        User user = userDAO.getByName(userName).get();
         String locationID = request.getParameter("location-id");
-        locationDAO.delete(user, locationID);
+        locationDAO.delete(locationID);
         response.sendRedirect(request.getContextPath() + "/");
     }
 }

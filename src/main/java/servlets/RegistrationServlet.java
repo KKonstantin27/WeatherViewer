@@ -1,7 +1,7 @@
 package servlets;
 
-import exceptions.authExceptions.UserAlreadyExistException;
 import exceptions.authExceptions.InvalidDataRegistrationException;
+import exceptions.authExceptions.UserAlreadyExistException;
 import org.thymeleaf.context.WebContext;
 
 import javax.servlet.annotation.WebServlet;
@@ -23,16 +23,12 @@ public class RegistrationServlet extends BaseServlet {
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, InvalidDataRegistrationException, UserAlreadyExistException {
         StringBuilder errors = new StringBuilder();
-
         String name = request.getParameter("name");
         String password = request.getParameter("password");
         String passwordRepeat = request.getParameter("password-repeat");
-
         errors = validator.validateLogin(name, errors);
         errors = validator.validatePassword(password, passwordRepeat, errors);
-
         WebContext ctx = new WebContext(request, response, getServletContext());
-
         if (errors.length() == 0) {
             authService.signUp(name, password);
             ctx.setVariable("messageTitle", "Успешная регистрация");

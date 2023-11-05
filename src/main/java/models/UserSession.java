@@ -29,17 +29,17 @@ public class UserSession {
     @Column(name = "expires_at", nullable = false)
     private ZonedDateTime expiresAt;
 
-    private static long SESSION_DURATION_IN_MINUTES = 480;
-    private static long OLD_SESSIONS_CLEANING_PERIOD = 480;
+    private static long sessionDurationInMinutes = 480;
+    private static long oldSessionsCleaningPeriod = 480;
 
     public UserSession(User user) {
         this.id = UUID.randomUUID().toString();
         this.user = user;
-        this.expiresAt = ZonedDateTime.now(ZoneId.of("UTC")).plusMinutes(SESSION_DURATION_IN_MINUTES);
+        this.expiresAt = ZonedDateTime.now(ZoneId.of("UTC")).plusMinutes(sessionDurationInMinutes);
     }
 
     public void updateExpiresAt() {
-        this.expiresAt = ZonedDateTime.now(ZoneId.of("UTC")).plusMinutes(SESSION_DURATION_IN_MINUTES);
+        this.expiresAt = ZonedDateTime.now(ZoneId.of("UTC")).plusMinutes(sessionDurationInMinutes);
     }
 
     public static void clearOldSessions() {
@@ -48,14 +48,12 @@ public class UserSession {
             UserSessionDAO userSessionDAO = new UserSessionDAO();
             userSessionDAO.delete();
         };
-        pool.scheduleAtFixedRate(task, OLD_SESSIONS_CLEANING_PERIOD, OLD_SESSIONS_CLEANING_PERIOD, TimeUnit.MINUTES);
+        pool.scheduleAtFixedRate(task, oldSessionsCleaningPeriod, oldSessionsCleaningPeriod, TimeUnit.MINUTES);
     }
 
-    public static void setSessionDurationInMinutes(long sessionDurationInMinutes) {
-        SESSION_DURATION_IN_MINUTES = sessionDurationInMinutes;
+    public static void setSessionDurationInMinutes(long sessionDurationInMinutesForTest) {
+        sessionDurationInMinutes = sessionDurationInMinutesForTest;
     }
 
-    public static void setOldSessionsCleaningPeriod(long oldSessionsCleaningPeriod) {
-        OLD_SESSIONS_CLEANING_PERIOD = oldSessionsCleaningPeriod;
-    }
+
 }

@@ -1,33 +1,46 @@
 package dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
+import lombok.Data;
 import models.Location;
 
-@Getter
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+
+@Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class WeatherDTO {
-    private String name;
     private String country;
+    private String currentLocalDateTime;
     private String description;
     private String icon;
     private String temp;
     private String feels_like;
+    private String min_temp;
+    private String max_temp;
     private String pressure;
     private String humidity;
     private String visibility;
-    private Location location;
-    @JsonProperty("speed")
     private String windSpeed;
-    @JsonProperty("deg")
     private String windDirection;
+    private String sunriseTime;
+    private String sunsetTime;
+    private Location location;
 
-    public WeatherDTO(String name, String country, String description, String icon, String temp, String feels_like,
-                      String pressure, String humidity, String visibility, String windSpeed, double windDeg, Location location) {
-        this.name = name;
+
+    public WeatherDTO(String country, int timezone, String description, String icon, String temp,
+                      String feels_like, String min_temp, String max_temp, String pressure, String humidity,
+                      String visibility, String windSpeed, double windDeg, long sunrise, long sunset, Location location) {
         this.country = country;
+        this.currentLocalDateTime = OffsetDateTime.ofInstant(Instant.now(), ZoneOffset.ofTotalSeconds(timezone))
+                .format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm", Locale.getDefault()));
         this.description = description;
+        this.min_temp = min_temp;
+        this.max_temp = max_temp;
         this.icon = icon;
         this.temp = temp;
         this.feels_like = feels_like;
@@ -36,6 +49,10 @@ public class WeatherDTO {
         this.visibility = visibility;
         this.windSpeed = windSpeed;
         this.windDirection = WindDirection.convertDegreesToDirection(windDeg);
+        this.sunriseTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(sunrise), ZoneOffset.ofTotalSeconds(timezone))
+                .format(DateTimeFormatter.ofPattern("HH:mm", Locale.getDefault()));
+        this.sunsetTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(sunset), ZoneOffset.ofTotalSeconds(timezone))
+                .format(DateTimeFormatter.ofPattern("HH:mm", Locale.getDefault()));
         this.location = location;
     }
 }

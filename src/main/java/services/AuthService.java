@@ -2,9 +2,9 @@ package services;
 
 import dao.UserDAO;
 import dao.UserSessionDAO;
+import exceptions.authExceptions.InvalidPasswordException;
 import exceptions.authExceptions.UserAlreadyExistException;
 import exceptions.authExceptions.UserDoesNotExistException;
-import exceptions.authExceptions.InvalidPasswordException;
 import models.User;
 import models.UserSession;
 import org.mindrot.jbcrypt.BCrypt;
@@ -25,12 +25,11 @@ public class AuthService {
         if (!BCrypt.checkpw(password, user.getPassword())) {
             throw new InvalidPasswordException("Неверный пароль");
         }
-        Optional<UserSession> userSessionOptional = userSessionDAO.getByUser(user);
-        UserSession userSession = userSessionOptional.orElseGet(() -> userSessionDAO.save(user));
+        UserSession userSession = userSessionDAO.save(user);
         return userSession.getId();
     }
 
-    public void signOut(User user, String userSessionID) {
-        userSessionDAO.delete(user, userSessionID);
+    public void signOut(String userSessionID) {
+        userSessionDAO.delete(userSessionID);
     }
 }

@@ -1,6 +1,5 @@
 package listeners;
 
-import dao.UserSessionDAO;
 import models.UserSession;
 import utils.DBUtil;
 
