@@ -27,8 +27,8 @@ public class AuthorizationServlet extends BaseServlet {
         String userSessionID = authService.signIn(name, password);
         Cookie cookieUserSession = new Cookie("userSessionID", userSessionID);
         Cookie cookieUserName = new Cookie("userName", name);
-        cookieUserSession.setMaxAge(-1);
-        cookieUserName.setMaxAge(-1);
+        cookieUserSession.setMaxAge(14400);
+        cookieUserName.setMaxAge(14400);
         response.addCookie(cookieUserSession);
         response.addCookie(cookieUserName);
         response.sendRedirect(request.getContextPath() + "/");

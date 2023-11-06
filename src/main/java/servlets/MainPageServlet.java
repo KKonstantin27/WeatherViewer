@@ -1,5 +1,6 @@
 package servlets;
 
+import dao.UserDAO;
 import dto.WeatherDTO;
 import exceptions.authExceptions.SessionExpiredException;
 import exceptions.openWeaterAPIExceptions.InvalidSearchQueryException;
@@ -39,8 +40,9 @@ public class MainPageServlet extends BaseServlet {
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        User user = userDAO.getByName(request.getCookies()[1].getValue()).get();
         String locationID = request.getParameter("location-id");
-        locationDAO.delete(locationID);
+        locationDAO.delete(user, locationID);
         response.sendRedirect(request.getContextPath() + "/");
     }
 }

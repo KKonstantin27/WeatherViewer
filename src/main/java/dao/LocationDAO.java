@@ -30,10 +30,11 @@ public class LocationDAO {
         }
     }
 
-    public void delete(String locationID) {
+    public void delete(User user, String locationID) {
         try (Session session = DBUtil.getSessionFactory().openSession()) {
             session.beginTransaction();
-            MutationQuery query = session.createMutationQuery("DELETE FROM Location WHERE id = :locationID");
+            MutationQuery query = session.createMutationQuery("DELETE FROM Location WHERE user = :user AND id = :locationID");
+            query.setParameter("user", user);
             query.setParameter("locationID", locationID);
             query.executeUpdate();
             session.getTransaction().commit();
