@@ -1,13 +1,12 @@
 package servlets;
 
-import dao.UserDAO;
 import dto.WeatherDTO;
 import exceptions.authExceptions.SessionExpiredException;
 import exceptions.openWeaterAPIExceptions.InvalidSearchQueryException;
 import exceptions.openWeaterAPIExceptions.OpenWeatherAPIUnavailableException;
 import exceptions.openWeaterAPIExceptions.RequestLimitExceededException;
 import models.Location;
-import models.User;
+import models.UserSession;
 import org.thymeleaf.context.WebContext;
 
 import javax.servlet.annotation.WebServlet;
@@ -26,8 +25,7 @@ public class MainPageServlet extends BaseServlet {
         WebContext ctx = new WebContext(request, response, getServletContext());
         if (cookies != null) {
             ctx = getCTXForAuthorizeUser(request, response, cookies);
-            User user = userDAO.getByName(cookies[1].getValue()).get();
-            List<Location> locations = locationDAO.getByUser(user);
+            List<Location> locations = locationDAO.getByUser(((UserSession) ctx.getVariable("userSession")).getUser());
             List<WeatherDTO> weatherDTOList = new ArrayList<>();
             if (locations.size() != 0) {
                 for (Location location : locations) {
@@ -39,10 +37,10 @@ public class MainPageServlet extends BaseServlet {
         templateEngine.process("index", ctx, response.getWriter());
     }
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        User user = userDAO.getByName(request.getCookies()[1].getValue()).get();
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, SessionExpiredException {
+        UserSession userSession = userSessionDAO.getBySessionID(request.getCookies()[0].getValue());
         String locationID = request.getParameter("location-id");
-        locationDAO.delete(user, locationID);
+        locationDAO.delete(userSession.getUser(), locationID);
         response.sendRedirect(request.getContextPath() + "/");
     }
 }

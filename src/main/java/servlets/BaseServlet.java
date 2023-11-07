@@ -8,6 +8,7 @@ import exceptions.openWeaterAPIExceptions.InvalidSearchQueryException;
 import exceptions.openWeaterAPIExceptions.NoResultException;
 import exceptions.openWeaterAPIExceptions.OpenWeatherAPIUnavailableException;
 import exceptions.openWeaterAPIExceptions.RequestLimitExceededException;
+import models.UserSession;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import services.AuthService;
@@ -76,19 +77,15 @@ public class BaseServlet extends HttpServlet {
     protected WebContext getCTXForAuthorizeUser(HttpServletRequest request, HttpServletResponse response, Cookie[] cookies) throws SessionExpiredException {
         WebContext ctx = new WebContext(request, response, getServletContext());
         String userSessionID = cookies[0].getValue();
-        String userName = cookies[1].getValue();
-        userSessionDAO.getBySessionID(userSessionID);
-        ctx.setVariable("userSessionID", userSessionID);
-        ctx.setVariable("userName", userName);
+        UserSession userSession = userSessionDAO.getBySessionID(userSessionID);
+        ctx.setVariable("userSession", userSession);
+        ctx.setVariable("userName", userSession.getUser().getName());
         return ctx;
     }
 
     protected void clearCookies(HttpServletResponse response) {
         Cookie cookieUserSession = new Cookie("userSessionID", "");
-        Cookie cookieUserName = new Cookie("userName", "");
         cookieUserSession.setMaxAge(0);
-        cookieUserName.setMaxAge(0);
         response.addCookie(cookieUserSession);
-        response.addCookie(cookieUserName);
     }
 }

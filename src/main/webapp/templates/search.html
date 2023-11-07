@@ -11,7 +11,7 @@
 <div class="fluid-container">
   <div class="row justify-content-between header-row">
     <div th:replace="header :: main-page-return"></div>
-    <div th:replace="header :: ${userSessionID == null} ? 'unauthorized-header' : 'authorized-header'"></div>
+    <div th:replace="header :: ${userSession == null} ? 'unauthorized-header' : 'authorized-header'"></div>
   </div>
   <div class="row">
     <h2 class="text-dark text-center">Поиск по локации</h2>
@@ -34,7 +34,7 @@
         <input name="location-name" th:value="${location.getName()}" hidden>
         <input name="latitude" th:value="${location.getLatitude()}" hidden>
         <input name="longitude" th:value="${location.getLongitude()}" hidden>
-        <button class="btn btn-dark col-2 searchPage-result-button" th:disabled="${userSessionID == null}">В избранное <i class="fa fa-solid fa-star white-icon"></i></button>
+        <button class="btn btn-dark col-2 searchPage-result-button" th:disabled="${userSession == null}">В избранное <i class="fa fa-solid fa-star white-icon"></i></button>
       </form>
     </div>
   </div>

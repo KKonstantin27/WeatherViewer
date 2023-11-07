@@ -6,7 +6,7 @@ import exceptions.openWeaterAPIExceptions.InvalidSearchQueryException;
 import exceptions.openWeaterAPIExceptions.NoResultException;
 import exceptions.openWeaterAPIExceptions.OpenWeatherAPIUnavailableException;
 import exceptions.openWeaterAPIExceptions.RequestLimitExceededException;
-import models.User;
+import models.UserSession;
 import org.thymeleaf.context.WebContext;
 
 import javax.servlet.annotation.WebServlet;
@@ -33,13 +33,13 @@ public class SearchServlet extends BaseServlet {
         templateEngine.process("search", ctx, response.getWriter());
     }
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, SessionExpiredException {
         Cookie[] cookies = request.getCookies();
-        User user = userDAO.getByName(cookies[1].getValue()).get();
+        UserSession userSession = userSessionDAO.getBySessionID(cookies[0].getValue());
         String name = request.getParameter("location-name");
         double latitude = Double.parseDouble(request.getParameter("latitude"));
         double longitude = Double.parseDouble(request.getParameter("longitude"));
-        locationDAO.save(name, user, latitude, longitude);
+        locationDAO.save(name, userSession.getUser(), latitude, longitude);
         response.sendRedirect(request.getContextPath() + "/");
     }
 }
