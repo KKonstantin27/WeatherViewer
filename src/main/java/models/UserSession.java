@@ -28,7 +28,7 @@ public class UserSession {
 
     @Column(name = "expires_at", nullable = false)
     private ZonedDateTime expiresAt;
-
+    private static ScheduledExecutorService pool = Executors.newScheduledThreadPool(1);
     private static long sessionDurationInMinutes = 480;
     private static long oldSessionsCleaningPeriod = 480;
 
@@ -43,7 +43,6 @@ public class UserSession {
     }
 
     public static void clearOldSessions() {
-        ScheduledExecutorService pool = Executors.newScheduledThreadPool(1);
         Runnable task = () -> {
             UserSessionDAO userSessionDAO = new UserSessionDAO();
             userSessionDAO.delete();
