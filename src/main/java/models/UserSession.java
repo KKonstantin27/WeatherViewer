@@ -44,9 +44,7 @@ public class UserSession {
     }
 
     public static void clearOldSessions() {
-        Runnable task = () -> {
-            userSessionDAO.delete();
-        };
+        Runnable task = () -> userSessionDAO.delete();
         pool.scheduleAtFixedRate(task, oldSessionsCleaningPeriod, oldSessionsCleaningPeriod, TimeUnit.MINUTES);
     }
 

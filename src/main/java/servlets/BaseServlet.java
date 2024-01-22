@@ -69,8 +69,7 @@ public class BaseServlet extends HttpServlet {
             ctx.setVariable("error", e.getMessage());
             templateEngine.process("errorPage", ctx, response.getWriter());
         } catch (ServletException e) {
-            ctx.setVariable("error", e.getMessage());
-            templateEngine.process("errorPage", ctx, response.getWriter());
+            e.printStackTrace();
         }
     }
 
