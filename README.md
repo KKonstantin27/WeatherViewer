@@ -3,7 +3,7 @@
 https://zhukovsd.github.io/java-backend-learning-course/Projects/WeatherViewer/
 
 Приложение доступно по адресу: <br>
-http://82.146.60.170:9090/WeatherViewer-1.0/
+http://176.113.83.41:8080/WeatherViewer-1.0/
 
 <h2>Используемые технологии</h2>
 <ul>
